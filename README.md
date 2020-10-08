@@ -11,3 +11,9 @@
 6. ```sequelize db:create```
 
 7. ```sequelize model:create --name Farm --attributes name:string,address:string,city:string,coordinates:string```
+
+8. ```heroku logs --app app_name```
+
+9. ```heroku ps:stop dyno --app app_name```
+
+10. ```heroku config:get DATABASE_URL -a app_name```

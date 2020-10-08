@@ -1,6 +1,6 @@
 const db = require('../models/index');
 var express = require('express');
-var router = express.Router();//hh
+var router = express.Router();
 
 router.get('/', async function(req, res, next) {
   try {
