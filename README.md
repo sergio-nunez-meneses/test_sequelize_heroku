@@ -10,7 +10,7 @@
 
 6. ```sequelize db:create```
 
-7. ```sequelize model:create --name Farm --attributes name:string,address:string,city:string,coordinates:string```
+7. ```sequelize model:create --name database_name --attributes name:string,address:string,city:string,coordinates:string```
 
 8. ```heroku logs --app app_name```
 
