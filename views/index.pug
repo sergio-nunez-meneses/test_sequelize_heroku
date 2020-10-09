@@ -1,9 +1,37 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
   
-  for farmer in farmers
-    p #{farmer.id}
-    p #{farmer.name}
+  div(class="container-fluid text-justify")
+    div(class="container")
+      h1(class="display-4") Current stored farmers
+      table(class="table table-striped table-hover table-bordered my-3")
+        thead(class="bg-success text-white text-left")
+          tr
+            th(scope="col") ID
+            th(scope="col") Name
+            th(scope="col") Address
+            th(scope="col") City
+            th(scope="col") Location
+        tbody(class="")
+          for farmer in farmers
+            tr
+              td(class="text-center") #{farmer.id}
+              td(class="") #{farmer.name}
+              td(class="") #{farmer.address}
+              td(class="") #{farmer.city}
+              td(class="") #{farmer.coordinates}
+
+    div(class="container mt-5")
+      h1(class="display-4") Insert new farmer
+      form(action="/farmer", method="POST")
+        div(class="form-group")
+          input(class="form-control", type="text", name="name", placeholder="farmer name")
+        div(class="form-group")
+          input(class="form-control", type="text", name="address", placeholder="farmer address")
+        div(class="form-group")
+          input(class="form-control", type="text", name="city", placeholder="farmer city")
+        div(class="form-group")
+          input(class="form-control", type="text", name="location", placeholder="farmer location")
+        div(class="form-group")
+          button(class="w-100 btn btn-lg bg-success text-white", type="submit") Insert
