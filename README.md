@@ -2,18 +2,16 @@
 
 2. ```cd folder_name```
 
-3. ```npm install```
+3. ```npm install nodemon sequelize mysql2 cors express-session joi bcrypt body-parser fs --save```
 
-4. ```npm install nodemon sequelize mysql2 express-session joi bcrypt body-parser fs --save```
+4. ```sequelize init```
 
-5. ```sequelize init```
+5. ```sequelize db:create```
 
-6. ```sequelize db:create```
+6. ```sequelize model:create --name database_name --attributes index:type,index:type,index:type,index:type```
 
-7. ```sequelize model:create --name database_name --attributes index:type,index:type,index:type,index:type```
+7. ```heroku logs --app app_name```
 
-8. ```heroku logs --app app_name```
+8. ```heroku ps:stop dyno --app app_name```
 
-9. ```heroku ps:stop dyno --app app_name```
-
-10. ```heroku config:get DATABASE_URL -a app_name```
+9. ```heroku config:get DATABASE_URL -a app_name```
