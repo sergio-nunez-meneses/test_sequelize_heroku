@@ -14,7 +14,7 @@ exports.insert = async function (req, res, next) {
   console.log(newFarmer);
   const farmers = await db.Farm.findAll();
 
-  res.render('/', {
+  res.render('index', {
     farmers: farmers
   });
 }
