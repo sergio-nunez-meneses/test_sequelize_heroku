@@ -1,16 +1,8 @@
 const db = require('../models/index');
+const farmerController = require('../controllers/farmer');
 var express = require('express');
 var router = express.Router();
 
-router.get('/', async function(req, res, next) {
-  try {
-    const test = await db.Farm.create();
-    const resultat = await db.Farm.findOne();
-    console.log(resultat);
-    res.render('index', { title: 'Express' });
-  } catch (e) {
-    console.error(e);
-  }
-});
+router.get('/', farmerController.getAll);
 
 module.exports = router;
