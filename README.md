@@ -8,7 +8,7 @@
 
 5. ```sequelize db:create```
 
-6. ```sequelize model:create --name database_name --attributes index:type,index:type,index:type,index:type```
+6. ```sequelize model:create --name table_name --attributes index:type,index:type,index:type,index:type```
 
 7. ```heroku logs --app app_name```
 

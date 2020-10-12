@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  
+  div.container.text-justify
+    div.container.my-auto.text-right
+      a.btn.btn-lg.bg-success.text-decoration-none.text-white(href="/") Home
+      
+    div.container.my-5
+      h1.display-4.text-center Login
+      div.w-50.mx-auto.my-5
+        form(action="/signin", method="POST")
+          div.form-group
+            input.form-control(type="text", name="name", placeholder="name")
+          div.form-group
+            input.form-control(type="password", name="password", placeholder="password")
+          div.form-group
+            button.w-100.btn.btn-lg.bg-success.text-white(type="submit") Sign in
+          

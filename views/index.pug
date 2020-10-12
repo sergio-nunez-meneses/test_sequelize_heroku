@@ -2,36 +2,41 @@ extends layout
 
 block content
   
-  div(class="container-fluid text-justify")
-    div(class="container")
-      h1(class="display-4") Current stored farmers
-      table(class="table table-striped table-hover table-bordered my-3")
-        thead(class="bg-success text-white text-left")
+  div.container-fluid.text-justify
+    div.container.my-auto.text-right
+      a.mr-1.ml-0.btn.btn-lg.bg-success.text-decoration-none.text-white(href="/signin") Sign in
+      a.mx-auto.btn.btn-lg.bg-success.text-decoration-none.text-white(href="/signup") Sign up
+      a.ml-1.mr-0.btn.btn-lg.bg-success.text-decoration-none.text-white(href="/logout") Logout
+      
+    div.container.my-auto
+      h1.display-4 Current stored farmers
+      table.table.table-striped.table-hover.table-bordered.my-3
+        thead.bg-success.text-white.text-left
           tr
             th(scope="col") ID
             th(scope="col") Name
             th(scope="col") Address
             th(scope="col") City
             th(scope="col") Location
-        tbody(class="")
+        tbody
           for farmer in farmers
             tr
-              td(class="text-center") #{farmer.id}
-              td(class="") #{farmer.name}
-              td(class="") #{farmer.address}
-              td(class="") #{farmer.city}
-              td(class="") #{farmer.coordinates}
+              td.text-center #{farmer.id}
+              td #{farmer.name}
+              td #{farmer.address}
+              td #{farmer.city}
+              td #{farmer.coordinates}
 
-    div(class="container mt-5")
-      h1(class="display-4") Insert new farmer
+    div.container.my-auto
+      h1.display-4 Insert new farmer
       form(action="/farmer", method="POST")
-        div(class="form-group")
-          input(class="form-control", type="text", name="name", placeholder="farmer name")
-        div(class="form-group")
-          input(class="form-control", type="text", name="address", placeholder="farmer address")
-        div(class="form-group")
-          input(class="form-control", type="text", name="city", placeholder="farmer city")
-        div(class="form-group")
-          input(class="form-control", type="text", name="coordinates", placeholder="farmer location")
-        div(class="form-group")
-          button(class="w-100 btn btn-lg bg-success text-white", type="submit") Insert
+        div.form-group
+          input.form-control(type="text", name="name", placeholder="farmer name")
+        div.form-group
+          input.form-control(type="text", name="address", placeholder="farmer address")
+        div.form-group
+          input.form-control(type="text", name="city", placeholder="farmer city")
+        div.form-group
+          input.form-control(type="text", name="coordinates", placeholder="farmer location")
+        div.form-group
+          button.w-100.btn.btn-lg.bg-success.text-white(type="submit") Insert

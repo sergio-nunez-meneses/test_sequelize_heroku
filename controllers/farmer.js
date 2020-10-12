@@ -13,7 +13,7 @@ exports.getAll = async function(req, res, next) {
   }
 }
 
-exports.insert = async function (req, res, next) {
+exports.insert = async function(req, res, next) {
   try {
     const newFarmer = await db.Farm.create({ ...req.body });
     console.log(newFarmer);
