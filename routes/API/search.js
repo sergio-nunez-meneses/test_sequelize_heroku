@@ -9,30 +9,27 @@ const Joi = require('joi');
 router.use(cors());
 
 router.get('/', ash(async function(req, res, next) {
-  const { farms } = req.query;
-  const where = {};
+  let values = req.query.name;
+  let query = {};
 
-  if (farms && farms !== '')
-  {
-    farms = farms.split(' ');
-
-    where = {
+  if (values && values !== '') {
+    query = {
       [Op.or]: []
     }
 
-    for (let farm of farms)
-    {
-      where[Op.or].push({
-        title: {
-          [Op.substring]: farm
+    values = values.split(' ');
+
+    for (let value of values) {
+      query[Op.or].push({
+        name: {
+          [Op.substring]: value
         }
       });
     }
+
+    const farmers = await db.Farm.findAll({ where: query });
+    res.send(farmers);
   }
-
-  const farmers = await db.Farm.findAll({ where: where });
-
-  res.send(farmers);
 }));
 
 module.exports = router;
