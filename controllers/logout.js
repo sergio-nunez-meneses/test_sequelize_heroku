@@ -20,7 +20,7 @@ exports.logout = async function(req, res, next) {
       await user.save();
     }
 
-    res.redirect('/signin');
+    res.redirect('/');
   } catch (error) {
     console.error(error);
   }

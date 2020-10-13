@@ -7,13 +7,18 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const fs = require('fs');
 
-var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
-var signinRouter = require('./routes/signin');
+var signinRouter = require('./routes/signin'); // site home
 var signupRouter = require('./routes/signup');
 var logoutRouter = require('./routes/logout');
-var farmerRouter = require('./routes/farmer');
+var displayRouter = require('./routes/displayFarmers'); // admin home
+var insertRouter = require('./routes/insertFarmer');
+var editRouter = require('./routes/editFarmer');
+var deleteRouter = require('./routes/deleteFarmer');
+// API
 var fetchRouter = require('./routes/fetch');
+var apiDisplayRouter = require('./routes/API/displayAll');
+var apiRouter = require('./routes/API/search');
 
 var app = express();
 
@@ -60,13 +65,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // autoload ? fs module
-app.use('/', indexRouter);
+app.use('/', signinRouter);
 app.use('/user', userRouter);
 app.use('/signin', signinRouter);
 app.use('/signup', signupRouter);
 app.use('/logout', logoutRouter);
-app.use('/farmer', farmerRouter);
+app.use('/displayFarmers', displayRouter);
+app.use('/insertFarmer', insertRouter);
+app.use('/editFarmer', editRouter);
+app.use('/deleteFarmer', deleteRouter);
+// API
 app.use('/fetch', fetchRouter);
+app.use('/API/displayAll', apiDisplayRouter);
+app.use('/API/search', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

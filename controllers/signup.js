@@ -25,7 +25,7 @@ exports.signup = async function(req, res, next) {
     const formValidation = schema.validate(req.body);
 
     if (formValidation.error) {
-      res.render('signup', { error: formValidation.error.details[0].message });
+      res.render('signup', { input: req.body, error: formValidation.error.details[0].message });
       return;
     }
 

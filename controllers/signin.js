@@ -18,7 +18,7 @@ exports.signin = async function(req, res, next) {
     const formValidation = schema.validate(req.body);
 
     if (formValidation.error) {
-      res.render('signin', { error: formValidation.error.details[0].message });
+      res.render('signin', { input: req.body, error: formValidation.error.details[0].message });
       return;
     }
 
@@ -45,7 +45,7 @@ exports.signin = async function(req, res, next) {
       where: { name: req.body.name }
     });
 
-    res.redirect('/');
+    res.redirect('/displayFarmers');
   } catch (error) {
     console.error(error);
   }
