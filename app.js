@@ -17,8 +17,8 @@ var editRouter = require('./routes/editFarmer');
 var deleteRouter = require('./routes/deleteFarmer');
 // API
 var fetchRouter = require('./routes/fetch');
-// var apiDisplayRouter = require('./routes/API/displayAll');
-// var apiRouter = require('./routes/API/search');
+var apiDisplayRouter = require('./routes/API/displayAll');
+var apiRouter = require('./routes/API/search');
 
 var app = express();
 
@@ -76,8 +76,8 @@ app.use('/editFarmer', editRouter);
 app.use('/deleteFarmer', deleteRouter);
 // API
 app.use('/fetch', fetchRouter);
-// app.use('/API/displayAll', apiDisplayRouter);
-// app.use('/API/search', apiRouter);
+app.use('/API/displayAll', apiDisplayRouter);
+app.use('/API/search', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
