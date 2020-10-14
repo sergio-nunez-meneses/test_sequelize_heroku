@@ -32,8 +32,8 @@ router.post('/', ash(async function(req, res, next) {
   const receivedForm = {
     name: req.body.name,
     password: req.body.password,
-    confirmPassword: req.body.confirmPassword
-    role: req.body.role,
+    confirmPassword: req.body.confirmPassword,
+    role: req.body.role
   }
   const formValidation = schema.validate(receivedForm);
 
