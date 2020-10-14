@@ -1,4 +1,4 @@
-const db = require('../models/index');
+const db = require('../../models/index');
 const ash = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
