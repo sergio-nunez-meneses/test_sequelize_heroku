@@ -19,6 +19,7 @@ var deleteRouter = require('./routes/deleteFarmer');
 var fetchRouter = require('./routes/fetch');
 var apiDisplayRouter = require('./routes/API/displayAll');
 var apiRouter = require('./routes/API/search');
+var apiSignUpRouter = require('./routes/API/signup');
 
 var app = express();
 
@@ -78,6 +79,7 @@ app.use('/deleteFarmer', deleteRouter);
 app.use('/fetch', fetchRouter);
 app.use('/API/displayAll', apiDisplayRouter);
 app.use('/API/search', apiRouter);
+app.use('/API/signup', apiSignUpRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
