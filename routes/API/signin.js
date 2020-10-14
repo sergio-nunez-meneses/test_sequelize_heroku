@@ -14,26 +14,18 @@ const schema = Joi.object({
   password: Joi.string()
     .min(6)
     .max(20)
-    .required(),
-  confirmPassword: Joi.string()
-    .equal(Joi.ref('password'))
-    .required(),
-  role: Joi.string()
-    .valid('admin', 'user')
     .required()
 })
-  .with('password', 'confirmPassword');
 
 router.use(cors());
 
 router.post('/', ash(async function(req, res, next) {
-  const receivedForm = {
+  res.send({ query: req.body });
+
+  const formValidation = schema.validate({
     name: req.body.name,
-    password: req.body.password,
-    confirmPassword: req.body.confirmPassword,
-    role: req.body.role
-  }
-  const formValidation = schema.validate(receivedForm);
+    password: req.body.password
+  });
 
   if (formValidation.error) {
     res.send({ error: formValidation.error.details[0].message });
@@ -42,22 +34,28 @@ router.post('/', ash(async function(req, res, next) {
 
   const user = await db.User.findOne({ where: { name: req.body.name } });
 
-  if (user) {
-    res.send({ error: 'User already exists' });
+  if (!user) {
+    res.send({ error: "User doesn't exist" });
     return;
   }
 
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const passwordValidation = await bcrypt.compare(req.body.password, user.password);
 
-  const newUser = await db.User.create({
-    name: req.body.name,
-    password: hashedPassword,
-    role: req.body.role,
-    token: '{}'
+  if (!passwordValidation) {
+    res.send({ error: 'Wrong password' });
+    return;
+  }
+
+  const token = {};
+  token[req.session.id] = new Date(Date.now());
+
+  await db.User.update({
+    token: JSON.stringify(token)
+  }, {
+    where: { name: req.body.name }
   });
-  console.log(newUser);
 
-  res.send({ message: 'User successfully registered!' });
+  res.send({});
 }));
 
 module.exports = router;
