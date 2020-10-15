@@ -7,13 +7,11 @@ const router = express.Router();
 router.use(cors());
 
 router.post('/:id', ash(async function(req, res, next) {
-  if (req.body !== '') {
-    const farmer = await db.Farm.update(
-      { ...req.body },
-      { where:
+  if (req.params.id !== '') {
+    await db.Farm.destroy({
+      where:
         { id: req.params.id }
-      }
-    );
+      });
 
     res.send({});
   }
