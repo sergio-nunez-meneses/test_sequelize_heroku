@@ -22,6 +22,7 @@ var apiRouter = require('./routes/API/search');
 var apiSignUpRouter = require('./routes/API/signup');
 var apiSignInRouter = require('./routes/API/signin');
 var apiInsertRouter = require('./routes/API/insertFarmer');
+var apiEditRouter = require('./routes/API/editFarmer');
 
 var app = express();
 
@@ -84,6 +85,7 @@ app.use('/API/search', apiRouter);
 app.use('/API/signup', apiSignUpRouter);
 app.use('/API/signin', apiSignInRouter);
 app.use('/API/insertFarmer', apiInsertRouter);
+app.use('/API/editFarmer', apiEditRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
