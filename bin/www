@@ -23,8 +23,23 @@ var server = http.createServer(app);
 
 var models = require('../models');
 
-models.sequelize.sync()
-  .then(function() {
+models.sequelize.sync({ force: true })
+  .then(async function() {
+    const newFarm = await models.Farm.create({
+      name: 'My farm',
+      address: '321, in a beautiful street',
+      city: 'Dijon',
+      coordinates: '47.323662, 5.027714'
+    });
+
+    const newFarmer = await models.Farmer.create({
+      name: 'Bjorn Doe',
+      email: 'bjorn.doe@farmer.com',
+      phone: '06 12 34 56 78'
+    });
+
+    await newFarm.addFarmer(newFarmer);
+    await newFarmer.addFarm(newFarm);
 
     /**
      * Listen on provided port, on all network interfaces.
@@ -33,7 +48,8 @@ models.sequelize.sync()
     server.listen(port);
     server.on('error', onError);
     server.on('listening', onListening);
-  });
+  })
+  .catch(error => console.error(error));
 
 /**
  * Normalize a port into a number, string, or false.
