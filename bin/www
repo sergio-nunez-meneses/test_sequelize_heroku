@@ -25,21 +25,72 @@ var models = require('../models');
 
 models.sequelize.sync({ force: true })
   .then(async function() {
-    const newFarm = await models.Farm.create({
-      name: 'My farm',
-      address: '321, in a beautiful street',
-      city: 'Dijon',
-      coordinates: '47.323662, 5.027714'
-    });
+    const farmerNames = [
+      'John Doe',
+      'Jane Doe',
+      'Jenny Doe',
+      'Jason Doe'
+    ];
 
-    const newFarmer = await models.Farmer.create({
-      name: 'Bjorn Doe',
-      email: 'bjorn.doe@farmer.com',
-      phone: '06 12 34 56 78'
-    });
+    const farmerEmails = [
+      'john.doe@agriculteur.fr',
+      'jane.doe@agricultrice.fr',
+      'jenny.doe@agricultrice.fr',
+      'jason.doe@agriculteur.fr'
+    ];
 
-    await newFarm.addFarmer(newFarmer);
-    await newFarmer.addFarm(newFarm);
+    const farmerPhones = [
+      '06 12 34 56 78',
+      '06 98 76 54 32',
+      '07 13 57 24 68',
+      '07 97 53 86 42'
+    ];
+
+    const farmNames = [
+      'Ma première ferme',
+      'Ma deuxième ferme',
+      'Ma troisième ferme',
+      'Ma quatrième ferme'
+    ];
+
+    const farmAddresses = [
+      '12, rue du marché',
+      '34, rue du fromage',
+      '98, rue de la tomate',
+      "76, rue de la patate"
+    ];
+
+    const farmCities = [
+      'nevers',
+      'pouges',
+      'fourchambault',
+      'varennes-vauzelles'
+    ];
+
+    const farmLocations = [
+      '46.987471, 3.150616',
+      '47.076937, 3.094017',
+      '47.019237, 3.087279',
+      '47.001512, 3.134294'
+    ];
+
+    for (var i = 0; i < farmerNames.length; i++) {
+      var farmer = await models.Farmer.create({
+        name: farmerNames[i],
+        email: farmerEmails[i],
+        phone: farmerPhones[i]
+      })
+
+      var farm = await models.Farm.create({
+        name: farmNames[i],
+        address: farmAddresses[i],
+        city: farmCities[i],
+        coordinates: farmLocations[i]
+      });
+
+      await farmer.addFarm(farm);
+      await farm.addFarmer(farmer);
+    }
 
     /**
      * Listen on provided port, on all network interfaces.
