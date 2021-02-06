@@ -69,6 +69,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/farmers', require('./routes/farmerRoute'));
+app.use('/api/farms', require('./routes/farmRoute'));
 
 // autoload ? fs module
 app.use('/', signinRouter);
