@@ -153,6 +153,25 @@ exports.update = ash(async function(req, res) {
   return;
 });
 
+exports.deleteAll = ash(async function(req, res) {
+  const farmers = await db.Farmer.destroy({
+    where: {},
+    truncate: false
+  });
+
+  if (farmers === 0) {
+    res.status(500).send({
+      error: 'An error occurred while removing all farmers. Maybe farmers were not found.'
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: `${farmers} farmers deleted successfully!`
+  });
+  return;
+});
+
 exports.delete = ash(async function(req, res) {
   console.log(req.params); // debug
 
