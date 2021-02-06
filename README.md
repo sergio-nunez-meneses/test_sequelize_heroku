@@ -64,8 +64,21 @@ sequelize db:migrate
 
 ### Heroku deployment
 
+Get database URL:
+
+```
+heroku config:get DATABASE_URL -a app_name
+```
+
+Restart/stop app dyno:
+
+```
+heroku ps:restart --app app_name
+heroku ps:stop dyno --app app_name
+```
+
+Retreive application's most recent logs:
+
 ```
 heroku logs --app app_name
-heroku ps:stop dyno --app app_name
-heroku config:get DATABASE_URL -a app_name
 ```

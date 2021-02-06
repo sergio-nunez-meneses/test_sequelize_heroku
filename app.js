@@ -1,11 +1,9 @@
-const db = require('./models/index');
 const session = require('express-session');
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const fs = require('fs');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
 var userRouter = require('./routes/user');
 var signinRouter = require('./routes/signin'); // site home
@@ -66,8 +64,11 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// app.use('/api/farmers', farmerRoutes); // use
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api/farmers', require('./routes/farmerRoute'));
 
 // autoload ? fs module
 app.use('/', signinRouter);
