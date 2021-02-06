@@ -103,14 +103,15 @@ exports.update = ash(async function(req, res) {
   console.log(req.params); // debug
   console.log(req.body); // debug
 
-  if (req.body === '') {
+  const requestKeys = Object.keys(req.body);
+
+  if (requestKeys.length === 0) {
     res.status(400).send({
       error: 'Fields cannot be empty.'
     });
     return;
   }
 
-  const requestKeys = Object.keys(req.body);
   var error;
 
   requestKeys.forEach(async function(key) {
