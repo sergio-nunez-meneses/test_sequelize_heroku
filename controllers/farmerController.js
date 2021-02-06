@@ -151,4 +151,32 @@ exports.update = ash(async function(req, res) {
     message: 'Farmer updated successfully!'
   });
   return;
-})
+});
+
+exports.delete = ash(async function(req, res) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const farmer = await db.Farmer.destroy({
+    where: id
+  });
+
+  if (!farmer) {
+    res.status(500).send({
+      error: `Couldn't delete farmer with id=' + ${req.params.id}.`
+    });
+    return;
+  }
+
+  if (farmer != 1) {
+    res.status(400).send({
+      error: `Cannot delete farmer with id=${req.params.id}. Maybe farmer was not found.`
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: 'Farmer deleted successfully!'
+  });
+  return;
+});
