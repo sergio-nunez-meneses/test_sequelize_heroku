@@ -1,5 +1,6 @@
 const db = require('../models/index');
 const ash = require('express-async-handler');
+const { Op } = require('sequelize');
 
 const Joi = require('joi');
 const schema = Joi.object({
