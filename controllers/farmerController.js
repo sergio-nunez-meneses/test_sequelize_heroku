@@ -79,3 +79,75 @@ exports.findAll = ash(async function(req, res) {
   res.status(200).send(farmers);
   return;
 });
+
+exports.findOne = ash(async function(req, res) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const farmer = await db.Farmer.findOne({
+    where: id
+  });
+
+  if (!farmer) {
+    res.status(500).send({
+      error: `Error retrieving farmer with id=' + ${req.params.id}. Maybe farmer was not found.`
+    });
+    return;
+  }
+
+  res.status(200).send(farmer);
+  return;
+});
+
+exports.update = ash(async function(req, res) {
+  console.log(req.params); // debug
+  console.log(req.body); // debug
+
+  if (req.body === '') {
+    res.status(400).send({
+      error: 'Fields cannot be empty.'
+    });
+    return;
+  }
+
+  const requestKeys = Object.keys(req.body);
+  var error;
+
+  requestKeys.forEach(async function(key) {
+    if (req.body[key] === '' || req.body[key] === undefined) {
+      error = true;
+    }
+  });
+
+  if (error) {
+    res.status(400).send({
+      error: 'Fields cannot be empty.'
+    });
+    return;
+  }
+
+  const id = { id: req.params.id };
+  const farmer = await db.Farmer.update(
+    { ...req.body },
+    { where: id }
+  );
+
+  if (!farmer) {
+    res.status(500).send({
+      error: `Error updating farmer with id=' + ${req.params.id}.`
+    });
+    return;
+  }
+
+  if (farmer != 1) {
+    res.status(400).send({
+      error: `Cannot update farmer with id=${req.params.id}. Maybe farmer was not found or fields are empty.`
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: 'Farmer updated successfully!'
+  });
+  return;
+})
