@@ -25,7 +25,7 @@ const schema = Joi.object({
 exports.create = ash(async function(req, res) {
   console.log(req.body); // debug
 
-  if (req.body.name === null && req.body.email === null && req.body.phone === null) {
+  if (requestKeys.length === 0) {
     res.status(400).send({
       error: 'Fields cannot be empty.'
     });
