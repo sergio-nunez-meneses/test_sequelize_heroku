@@ -172,3 +172,31 @@ exports.deleteAll = ash(async function(req, res) {
   });
   return;
 });
+
+exports.deleteOne = ash(async function(req, res) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const farm = await db.Farm.destroy({
+    where: id
+  });
+
+  if (farm.length === 0 || farm === null) {
+    res.status(500).send({
+      error: `Couldn't delete farm with id=' + ${req.params.id}.`
+    });
+    return;
+  }
+
+  if (farm != 1) {
+    res.status(400).send({
+      error: `Cannot delete farm with id=${req.params.id}. Maybe farm was not found.`
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: 'Farm deleted successfully!'
+  });
+  return;
+});

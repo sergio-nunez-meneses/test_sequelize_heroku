@@ -172,7 +172,7 @@ exports.deleteAll = ash(async function(req, res) {
   return;
 });
 
-exports.delete = ash(async function(req, res) {
+exports.deleteOne = ash(async function(req, res) {
   console.log(req.params); // debug
 
   const id = { id: req.params.id };
@@ -180,7 +180,7 @@ exports.delete = ash(async function(req, res) {
     where: id
   });
 
-  if (!farmer) {
+  if (farmer.length === 0 || farmer === null) {
     res.status(500).send({
       error: `Couldn't delete farmer with id=' + ${req.params.id}.`
     });
