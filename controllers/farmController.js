@@ -72,7 +72,7 @@ exports.findAll = ash(async function(req, res) {
 
   if (farm.length === 0) {
     res.status(500).send({
-      error: 'An error occurred while retrieving  farm. Maybe farm were not found.'
+      error: 'An error occurred while retrieving  farms. Maybe farm were not found.'
     });
     return;
   }
@@ -150,6 +150,25 @@ exports.update = ash(async function(req, res) {
 
   res.status(200).send({
     message: 'Farmer updated successfully!'
+  });
+  return;
+});
+
+exports.deleteAll = ash(async function(req, res) {
+  const farms = await db.Farm.destroy({
+    where: {},
+    truncate: false
+  });
+
+  if (farms === 0) {
+    res.status(500).send({
+      error: 'An error occurred while removing all farms. Maybe farms were not found.'
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: `${farms} farms deleted successfully!`
   });
   return;
 });

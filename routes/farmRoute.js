@@ -5,5 +5,6 @@ router.post('/', farmController.create);
 router.get('/', farmController.findAll);
 router.get('/:id', farmController.findOne);
 router.put('/:id', farmController.update);
+router.delete('/', farmController.deleteAll);
 
 module.exports = router;
