@@ -45,7 +45,7 @@ exports.create = ash(async function(req, res) {
     { ...req.body }
   );
 
-  if (!farmer) {
+  if (farmer.length === 0) {
     res.status(500).send({
       error: 'An error occurred while creating farmer.'
     });

@@ -46,7 +46,7 @@ exports.create = ash(async function(req, res) {
     { ...req.body }
   );
 
-  if (!farm) {
+  if (farm.length === 0) {
     res.status(500).send({
       error: 'An error occurred while creating farm.'
     });
@@ -88,8 +88,6 @@ exports.findOne = ash(async function(req, res) {
   const farm = await db.Farm.findOne({
     where: id
   });
-
-  console.log(farm);
 
   if (farm === null) {
     res.status(500).send({
