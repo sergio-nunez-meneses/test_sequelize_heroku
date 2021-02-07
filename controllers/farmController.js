@@ -80,3 +80,24 @@ exports.findAll = ash(async function(req, res) {
   res.status(200).send(farm);
   return;
 });
+
+exports.findOne = ash(async function(req, res) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const farm = await db.Farm.findOne({
+    where: id
+  });
+
+  console.log(farm);
+
+  if (farm === null) {
+    res.status(500).send({
+      error: `Error retrieving farm with id=' + ${req.params.id}. Maybe farm was not found.`
+    });
+    return;
+  }
+
+  res.status(200).send(farm);
+  return;
+});
