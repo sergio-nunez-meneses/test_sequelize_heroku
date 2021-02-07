@@ -70,8 +70,6 @@ exports.findAll = ash(async function(req, res) {
     where: condition
   });
 
-  console.log(farm);
-
   if (farm.length === 0) {
     res.status(500).send({
       error: 'An error occurred while retrieving  farm. Maybe farm were not found.'

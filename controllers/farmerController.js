@@ -69,7 +69,7 @@ exports.findAll = ash(async function(req, res) {
     where: condition
   });
 
-  if (!farmers) {
+  if (farmers.length === 0) {
     res.status(500).send({
       error: 'An error occurred while retrieving  farmers. Maybe farmers were not found.'
     });
