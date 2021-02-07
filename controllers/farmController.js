@@ -101,3 +101,57 @@ exports.findOne = ash(async function(req, res) {
   res.status(200).send(farm);
   return;
 });
+
+exports.update = ash(async function(req, res) {
+  console.log(req.params); // debug
+  console.log(req.body); // debug
+
+  const requestKeys = Object.keys(req.body);
+
+  if (requestKeys.length === 0) {
+    res.status(400).send({
+      error: 'Fields cannot be empty.'
+    });
+    return;
+  }
+
+  var error;
+
+  requestKeys.forEach(async function(key) {
+    if (req.body[key] === '' || req.body[key] === undefined) {
+      error = true;
+    }
+  });
+
+  if (error) {
+    res.status(400).send({
+      error: 'Fields cannot be empty.'
+    });
+    return;
+  }
+
+  const id = { id: req.params.id };
+  const farm = await db.Farm.update(
+    { ...req.body },
+    { where: id }
+  );
+
+  if (farm.length === 0 || farm === null) {
+    res.status(500).send({
+      error: `Error updating farm with id=' + ${req.params.id}.`
+    });
+    return;
+  }
+
+  if (farm != 1) {
+    res.status(400).send({
+      error: `Cannot update farm with id=${req.params.id}. Maybe farm was not found or fields are empty.`
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: 'Farmer updated successfully!'
+  });
+  return;
+});

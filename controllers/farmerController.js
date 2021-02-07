@@ -133,7 +133,7 @@ exports.update = ash(async function(req, res) {
     { where: id }
   );
 
-  if (!farmer) {
+  if (farmer.length === 0 || farmer === null) {
     res.status(500).send({
       error: `Error updating farmer with id=' + ${req.params.id}.`
     });
