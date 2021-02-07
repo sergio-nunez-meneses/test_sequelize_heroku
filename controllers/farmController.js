@@ -58,3 +58,27 @@ exports.create = ash(async function(req, res) {
   });
   return;
 });
+
+exports.findAll = ash(async function(req, res) {
+  console.log(req.query); // debug
+
+  const name = req.query.name;
+  const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+
+  const farm = await db.Farm.findAll({
+    limit: 5,
+    where: condition
+  });
+
+  console.log(farm);
+
+  if (farm.length === 0) {
+    res.status(500).send({
+      error: 'An error occurred while retrieving  farm. Maybe farm were not found.'
+    });
+    return;
+  }
+
+  res.status(200).send(farm);
+  return;
+});
