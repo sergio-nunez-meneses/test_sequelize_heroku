@@ -66,25 +66,28 @@ exports.create = ash(async function(req, res) {
 });
 
 exports.findAll = ash(async function(req, res) {
-  console.log(req.query); // debug
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.findAllInstances(req, res, model);
 
-  const name = req.query.name;
-  const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
-
-  const farms = await db.Farm.findAll({
-    limit: 5,
-    where: condition
-  });
-
-  if (farms.length === 0) {
-    res.status(500).send({
-      error: 'An error occurred while retrieving  farms. Maybe farms were not found.'
-    });
-    return;
-  }
-
-  res.status(200).send(farms);
-  return;
+  // console.log(req.query); // debug
+  //
+  // const name = req.query.name;
+  // const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+  //
+  // const farms = await db.Farm.findAll({
+  //   limit: 5,
+  //   where: condition
+  // });
+  //
+  // if (farms.length === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while retrieving  farms. Maybe farms were not found.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send(farms);
+  // return;
 });
 
 exports.findOne = ash(async function(req, res) {

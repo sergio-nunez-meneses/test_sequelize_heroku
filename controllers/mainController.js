@@ -86,7 +86,7 @@ exports.findAllInstances = async function(req, res, model) {
   });
 
   if (instances.length === 0) {
-    res.status(500).send({
+    return res.status(500).send({
       error: `An error occurred while retrieving ${model[1]}. Maybe ${model[1]} were not found.`
     });
   }
