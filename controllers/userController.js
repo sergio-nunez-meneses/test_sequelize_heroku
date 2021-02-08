@@ -1,7 +1,7 @@
 const db = require('../models/index');
 const ash = require('express-async-handler');
-const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
 const mainController = require('./mainController');
 
 const Joi = require('joi');
@@ -59,98 +59,16 @@ exports.create = ash(async function(req, res) {
 
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.createInstance(req, res, createSchema, model);
-
-  // const formValidation = await createSchema.validate(req.body);
-  //
-  // if (formValidation.error) {
-  //   res.status(400).send({
-  //     error: formValidation.error.details[0].message
-  //   });
-  //   return;
-  // }
-  //
-  // const userName = req.body.name;
-  // var user = await db.User.findOne({
-  //   where: {
-  //     name: userName
-  //   }
-  // });
-  //
-  // if (user !== null) {
-  //   res.status(500).send({
-  //     error: `User name=${userName} already exists.`
-  //   });
-  //   return;
-  // }
-  //
-  // const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  //
-  // user = await db.User.create({
-  //   name: userName,
-  //   email: req.body.email,
-  //   password: hashedPassword,
-  //   role: req.body.role,
-  //   token: '{}'
-  // });
-  //
-  // if (user.length === 0) {
-  //   res.status(500).send({
-  //     error: 'An error occurred while creating user.'
-  //   });
-  //   return;
-  // }
-  //
-  // res.status(200).send({
-  //   message: 'User created successfully!'
-  // });
-  // return;
 });
 
 exports.findAll = ash(async function(req, res) {
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.findAllInstances(req, res, model);
-
-  // console.log(req.query); // debug
-  //
-  // const name = req.query.name;
-  // const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
-  //
-  // const users = await db.User.findAll({
-  //   limit: 5,
-  //   where: condition
-  // });
-  //
-  // if (users.length === 0) {
-  //   res.status(500).send({
-  //     error: 'An error occurred while retrieving  users. Maybe users were not found.'
-  //   });
-  //   return;
-  // }
-  //
-  // res.status(200).send(users);
-  // return;
 });
 
 exports.findOne = ash(async function(req, res) {
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.findOneInstance(req, res, model);
-
-  // console.log(req.params); // debug
-  //
-  // const id = { id: req.params.id };
-  // const user = await db.User.findOne({
-  //   where: id
-  // });
-  //
-  // if (user === null) {
-  //   res.status(500).send({
-  //     error: `Error retrieving user with id=${req.params.id}. Maybe user was not found.`
-  //   });
-  //   return;
-  // }
-  //
-  // res.status(200).send(user);
-  // return;
 });
 
 exports.update = ash(async function(req, res) {
@@ -172,111 +90,16 @@ exports.update = ash(async function(req, res) {
 
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.updateInstance(req, res, model);
-
-  // console.log(req.params); // debug
-  // console.log(req.body); // debug
-  //
-  // const requestKeys = Object.keys(req.body);
-  //
-  // if (requestKeys.length === 0) {
-  //   res.status(400).send({
-  //     error: 'Fields cannot be empty.'
-  //   });
-  //   return;
-  // }
-  //
-  // var error;
-  //
-  // requestKeys.forEach(async function(key) {
-  //   if (req.body[key] === '' || req.body[key] === undefined) {
-  //     error = true;
-  //   }
-  // });
-  //
-  // if (error) {
-  //   res.status(400).send({
-  //     error: 'Fields cannot be empty.'
-  //   });
-  //   return;
-  // }
-  //
-  // const id = { id: req.params.id };
-  // const user = await db.User.update(
-  //   { ...req.body },
-  //   { where: id }
-  // );
-  //
-  // if (user.length === 0 || user === null) {
-  //   res.status(500).send({
-  //     error: `Error updating user with id=${req.params.id}.`
-  //   });
-  //   return;
-  // }
-  //
-  // if (user != 1) {
-  //   res.status(400).send({
-  //     error: `Cannot update user with id=${req.params.id}. Maybe user was not found or fields are empty.`
-  //   });
-  //   return;
-  // }
-  //
-  // res.status(200).send({
-  //   message: 'User updated successfully!'
-  // });
-  // return;
 });
 
 exports.deleteAll = ash(async function(req, res) {
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.deleteAllInstances(req, res, model);
-
-  // const users = await db.User.destroy({
-  //   where: {},
-  //   truncate: false
-  // });
-  //
-  // if (users === 0) {
-  //   res.status(500).send({
-  //     error: 'An error occurred while removing all users. Maybe users were not found.'
-  //   });
-  //   return;
-  // }
-  //
-  // res.status(200).send({
-  //   message: `${users} users deleted successfully!`
-  // });
-  // return;
 });
 
 exports.deleteOne = ash(async function(req, res) {
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.deleteOneInstance(req, res, model);
-
-  // console.log(req.params); // debug
-  //
-  // const id = { id: req.params.id };
-  // const user = await db.User.destroy({
-  //   where: id
-  // });
-  //
-  // if (user.length === 0 || user === null) {
-  //   res.status(500).send({
-  //     error: `Couldn't delete user with id=${req.params.id}.`
-  //   });
-  //   return;
-  // }
-  //
-  // if (user != 1) {
-  //   res.status(400).send({
-  //     error: `Cannot delete user with id=${req.params.id}. Maybe user was not found.`
-  //   });
-  //   return;
-  // }
-  //
-  // res.status(200).send({
-  //   message: 'User deleted successfully!'
-  // });
-  // return;
 });
 
 exports.signIn = ash(async function(req, res) {
