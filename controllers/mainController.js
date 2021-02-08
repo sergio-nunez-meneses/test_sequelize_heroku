@@ -23,14 +23,32 @@ exports.findAllInstances = async function(req, res, model) {
   const name = req.query.name;
   const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-  const instance = await model[0].findAll({
+  const instances = await model[0].findAll({
     limit: 5,
     where: condition
   });
 
-  if (instance.length === 0) {
+  if (instances.length === 0) {
     res.status(500).send({
       error: `An error occurred while retrieving ${model[1]}. Maybe ${model[1]} were not found.`
+    });
+  }
+
+  res.status(200).send(instances);
+};
+
+exports.findOneInstance = async function(req, res, model) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const instance = await model[0].findOne({
+    where: id
+  });
+  const instanceName = model[1].substring(0, model[1] - 1);
+
+  if (instance === null) {
+    res.status(500).send({
+      error: `Error retrieving ${instanceName} with id=${req.params.id}. Maybe ${instanceName} was not found.`
     });
   }
 

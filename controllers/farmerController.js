@@ -83,22 +83,25 @@ exports.findAll = ash(async function(req, res) {
 });
 
 exports.findOne = ash(async function(req, res) {
-  console.log(req.params); // debug
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.findOneInstance(req, res, model);
 
-  const id = { id: req.params.id };
-  const farmer = await db.Farmer.findOne({
-    where: id
-  });
-
-  if (farmer === null) {
-    res.status(500).send({
-      error: `Error retrieving farmer with id=${req.params.id}. Maybe farmer was not found.`
-    });
-    return;
-  }
-
-  res.status(200).send(farmer);
-  return;
+  // console.log(req.params); // debug
+  //
+  // const id = { id: req.params.id };
+  // const farmer = await db.Farmer.findOne({
+  //   where: id
+  // });
+  //
+  // if (farmer === null) {
+  //   res.status(500).send({
+  //     error: `Error retrieving farmer with id=${req.params.id}. Maybe farmer was not found.`
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send(farmer);
+  // return;
 });
 
 exports.update = ash(async function(req, res) {
