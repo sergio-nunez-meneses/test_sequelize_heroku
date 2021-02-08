@@ -187,29 +187,32 @@ exports.deleteAll = ash(async function(req, res) {
 });
 
 exports.deleteOne = ash(async function(req, res) {
-  console.log(req.params); // debug
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.deleteOneInstance(req, res, model);
 
-  const id = { id: req.params.id };
-  const farmer = await db.Farmer.destroy({
-    where: id
-  });
-
-  if (farmer.length === 0 || farmer === null) {
-    res.status(500).send({
-      error: `Couldn't delete farmer with id=${req.params.id}.`
-    });
-    return;
-  }
-
-  if (farmer != 1) {
-    res.status(400).send({
-      error: `Cannot delete farmer with id=${req.params.id}. Maybe farmer was not found.`
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: 'Farmer deleted successfully!'
-  });
-  return;
+  // console.log(req.params); // debug
+  //
+  // const id = { id: req.params.id };
+  // const farmer = await db.Farmer.destroy({
+  //   where: id
+  // });
+  //
+  // if (farmer.length === 0 || farmer === null) {
+  //   res.status(500).send({
+  //     error: `Couldn't delete farmer with id=${req.params.id}.`
+  //   });
+  //   return;
+  // }
+  //
+  // if (farmer != 1) {
+  //   res.status(400).send({
+  //     error: `Cannot delete farmer with id=${req.params.id}. Maybe farmer was not found.`
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: 'Farmer deleted successfully!'
+  // });
+  // return;
 });

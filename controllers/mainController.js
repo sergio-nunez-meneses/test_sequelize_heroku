@@ -128,3 +128,29 @@ exports.deleteAllInstances = async function(req, res, model) {
     message: `${instances} farmers deleted successfully!`
   });
 };
+
+exports.deleteOneInstance = async function(req, res, model) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const instance = await model[0].destroy({
+    where: id
+  });
+  const instanceName = model[1].substring(0, model[1].length - 1);
+
+  if (instance.length === 0 || instance === null) {
+    res.status(500).send({
+      error: `Couldn't delete ${instanceName} with id=${req.params.id}.`
+    });
+  }
+
+  if (instance != 1) {
+    res.status(400).send({
+      error: `Cannot delete ${instanceName} with id=${req.params.id}. Maybe ${instanceName} was not found.`
+    });
+  }
+
+  res.status(200).send({
+    message: `${instanceName} deleted successfully!`
+  });
+};
