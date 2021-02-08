@@ -1,6 +1,7 @@
 const db = require('../models/index');
 const ash = require('express-async-handler');
 const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 exports.getModelNameFromUrl = async function(req) {
   const url = req.originalUrl.split('/');
@@ -76,7 +77,7 @@ exports.createInstance = async function(req, res, schema, model) {
     });
   }
 
-  if (instanceName === 'users') {
+  if (instanceName === 'user') {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     instance = await model[0].create({
