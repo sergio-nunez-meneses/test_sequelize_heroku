@@ -3,15 +3,16 @@ const ash = require('express-async-handler');
 const { Op } = require('sequelize');
 
 exports.getModelNameFromUrl = async function(req) {
-  var url = req.originalUrl.split('/');
+  const url = req.originalUrl.split('/');
+  const endpoint = url[2].includes('?') ? url[2].split('?')[0] : url[2];
   var model = [];
 
-  if (url[2] === 'farmers') {
-    model.push(db.Farmer, url[2]);
-  } else if (url[2] === 'farms') {
-    model.push(db.Farm, url[2]);
-  } else if (url[2] === 'users') {
-    model.push(db.User, url[2]);
+  if (endpoint === 'farmers') {
+    model.push(db.Farmer, endpoint);
+  } else if (endpoint === 'farms') {
+    model.push(db.Farm, endpoint);
+  } else if (endpoint === 'users') {
+    model.push(db.User, endpoint);
   }
 
   return model;
