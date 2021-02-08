@@ -91,22 +91,25 @@ exports.findAll = ash(async function(req, res) {
 });
 
 exports.findOne = ash(async function(req, res) {
-  console.log(req.params); // debug
-
-  const id = { id: req.params.id };
-  const farm = await db.Farm.findOne({
-    where: id
-  });
-
-  if (farm === null) {
-    res.status(500).send({
-      error: `Error retrieving farm with id=${req.params.id}. Maybe farm was not found.`
-    });
-    return;
-  }
-
-  res.status(200).send(farm);
-  return;
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.findOneInstance(req, res, model);
+  
+  // console.log(req.params); // debug
+  //
+  // const id = { id: req.params.id };
+  // const farm = await db.Farm.findOne({
+  //   where: id
+  // });
+  //
+  // if (farm === null) {
+  //   res.status(500).send({
+  //     error: `Error retrieving farm with id=${req.params.id}. Maybe farm was not found.`
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send(farm);
+  // return;
 });
 
 exports.update = ash(async function(req, res) {

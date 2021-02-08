@@ -104,7 +104,7 @@ exports.findOneInstance = async function(req, res, model) {
   const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance === null) {
-    res.status(500).send({
+    return res.status(500).send({
       error: `Error retrieving ${instanceName} with id=${req.params.id}. Maybe ${instanceName} was not found.`
     });
   }
