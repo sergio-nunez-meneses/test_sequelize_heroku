@@ -24,7 +24,13 @@ const schema = Joi.object({
 });
 
 exports.create = ash(async function(req, res) {
-  await mainController.checkEmptyFields(req, res);
+  const keys = await mainController.checkEmptyFields(req, res);
+
+  if (!keys) {
+    return res.status(400).send({
+      error: 'Request cannot be empty.'
+    });
+  }
 
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.createInstance(req, res, schema, model);
