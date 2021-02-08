@@ -20,7 +20,7 @@ exports.getModelNameFromUrl = async function(req) {
 exports.checkEmptyFields = async function(req, res) {
   console.log(req.body); // debug
 
-  const requestKeys = Object.keys(req.body);
+  const requestKeys = await Object.keys(req.body);
 
   if (requestKeys.length === 0) {
     res.status(400).send({
@@ -34,7 +34,7 @@ exports.checkEmptyFields = async function(req, res) {
 exports.checkEmptyValues = async function(req, res, keys) {
   var error;
 
-  keys.forEach(await function(key) {
+  await keys.forEach(function(key) {
     if (req.body[key] === '' || req.body[key] === undefined || req.body[key] === null) {
       error = true;
     }
@@ -109,5 +109,22 @@ exports.updateInstance = async function(req, res, model) {
 
   res.status(200).send({
     message: `${instanceName} updated successfully!`
+  });
+};
+
+exports.deleteAllInstances = async function(req, res, model) {
+  const instances = await model[0].destroy({
+    where: {},
+    truncate: false
+  });
+
+  if (instances === 0) {
+    res.status(500).send({
+      error: `An error occurred while removing all ${model[1]}. Maybe ${model[1]} were not found.`
+    });
+  }
+
+  res.status(200).send({
+    message: `${instances} farmers deleted successfully!`
   });
 };

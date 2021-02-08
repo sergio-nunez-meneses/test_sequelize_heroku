@@ -107,6 +107,7 @@ exports.findOne = ash(async function(req, res) {
 exports.update = ash(async function(req, res) {
   const keys = await mainController.checkEmptyFields(req, res);
   await mainController.checkEmptyValues(req, res, keys);
+
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.updateInstance(req, res, model);
 
@@ -164,22 +165,25 @@ exports.update = ash(async function(req, res) {
 });
 
 exports.deleteAll = ash(async function(req, res) {
-  const farmers = await db.Farmer.destroy({
-    where: {},
-    truncate: false
-  });
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.deleteAllInstances(req, res, model);
 
-  if (farmers === 0) {
-    res.status(500).send({
-      error: 'An error occurred while removing all farmers. Maybe farmers were not found.'
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: `${farmers} farmers deleted successfully!`
-  });
-  return;
+  // const farmers = await db.Farmer.destroy({
+  //   where: {},
+  //   truncate: false
+  // });
+  //
+  // if (farmers === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while removing all farmers. Maybe farmers were not found.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: `${farmers} farmers deleted successfully!`
+  // });
+  // return;
 });
 
 exports.deleteOne = ash(async function(req, res) {
