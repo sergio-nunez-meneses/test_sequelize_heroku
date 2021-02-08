@@ -194,7 +194,7 @@ exports.update = ash(async function(req, res) {
 exports.deleteAll = ash(async function(req, res) {
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.deleteAllInstances(req, res, model);
-  
+
   // const farms = await db.Farm.destroy({
   //   where: {},
   //   truncate: false
@@ -214,29 +214,32 @@ exports.deleteAll = ash(async function(req, res) {
 });
 
 exports.deleteOne = ash(async function(req, res) {
-  console.log(req.params); // debug
-
-  const id = { id: req.params.id };
-  const farm = await db.Farm.destroy({
-    where: id
-  });
-
-  if (farm.length === 0 || farm === null) {
-    res.status(500).send({
-      error: `Couldn't delete farm with id=${req.params.id}.`
-    });
-    return;
-  }
-
-  if (farm != 1) {
-    res.status(400).send({
-      error: `Cannot delete farm with id=${req.params.id}. Maybe farm was not found.`
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: 'Farm deleted successfully!'
-  });
-  return;
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.deleteOneInstance(req, res, model);
+  
+  // console.log(req.params); // debug
+  //
+  // const id = { id: req.params.id };
+  // const farm = await db.Farm.destroy({
+  //   where: id
+  // });
+  //
+  // if (farm.length === 0 || farm === null) {
+  //   res.status(500).send({
+  //     error: `Couldn't delete farm with id=${req.params.id}.`
+  //   });
+  //   return;
+  // }
+  //
+  // if (farm != 1) {
+  //   res.status(400).send({
+  //     error: `Cannot delete farm with id=${req.params.id}. Maybe farm was not found.`
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: 'Farm deleted successfully!'
+  // });
+  // return;
 });
