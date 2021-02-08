@@ -23,7 +23,7 @@ exports.checkEmptyFields = async function(req, res) {
   const requestKeys = await Object.keys(req.body);
 
   if (requestKeys.length === 0) {
-    res.status(400).send({
+    return res.status(400).send({
       error: 'Request cannot be empty.'
     });
   }
@@ -41,7 +41,7 @@ exports.checkEmptyValues = async function(req, res, keys) {
   });
 
   if (error) {
-    res.status(400).send({
+    return res.status(400).send({
       error: 'Fields cannot be empty.'
     });
   }
@@ -53,7 +53,7 @@ exports.createInstance = async function(req, res, schema, model) {
   const formValidation = await schema.validate(req.body);
 
   if (formValidation.error) {
-    res.status(400).send({
+    return res.status(400).send({
       error: formValidation.error.details[0].message
     });
   }

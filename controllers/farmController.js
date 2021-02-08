@@ -1,6 +1,7 @@
 const db = require('../models/index');
 const ash = require('express-async-handler');
 const { Op } = require('sequelize');
+const mainController = require('./mainController');
 
 const Joi = require('joi');
 const schema = Joi.object({
@@ -22,41 +23,46 @@ const schema = Joi.object({
 });
 
 exports.create = ash(async function(req, res) {
-  console.log(req.body); // debug
+  await mainController.checkEmptyFields(req, res);
 
-  const requestKeys = Object.keys(req.body);
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.createInstance(req, res, schema, model);
 
-  if (requestKeys.length === 0) {
-    res.status(400).send({
-      error: 'Fields cannot be empty.'
-    });
-    return;
-  }
-
-  const formValidation = schema.validate(req.body);
-
-  if (formValidation.error) {
-    res.status(400).send({
-      error: formValidation.error.details[0].message
-    });
-    return;
-  }
-
-  const farm = await db.Farm.create(
-    { ...req.body }
-  );
-
-  if (farm.length === 0) {
-    res.status(500).send({
-      error: 'An error occurred while creating farm.'
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: 'Farm created successfully!'
-  });
-  return;
+  // console.log(req.body); // debug
+  //
+  // const requestKeys = Object.keys(req.body);
+  //
+  // if (requestKeys.length === 0) {
+  //   res.status(400).send({
+  //     error: 'Fields cannot be empty.'
+  //   });
+  //   return;
+  // }
+  //
+  // const formValidation = schema.validate(req.body);
+  //
+  // if (formValidation.error) {
+  //   res.status(400).send({
+  //     error: formValidation.error.details[0].message
+  //   });
+  //   return;
+  // }
+  //
+  // const farm = await db.Farm.create(
+  //   { ...req.body }
+  // );
+  //
+  // if (farm.length === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while creating farm.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: 'Farm created successfully!'
+  // });
+  // return;
 });
 
 exports.findAll = ash(async function(req, res) {
