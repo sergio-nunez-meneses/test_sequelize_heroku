@@ -20,12 +20,15 @@ exports.getModelNameFromUrl = async function(req) {
 exports.checkEmptyFields = async function(req, res) {
   console.log(req.body); // debug
 
-  const requestKeys = await Object.keys(req.body);
+  var requestKeys = await Object.keys(req.body);
+  var error;
 
   if (requestKeys.length === 0) {
-    return res.status(400).send({
-      error: 'Request cannot be empty.'
-    });
+    error = true;
+  }
+
+  if (error) {
+    return false;
   }
 
   return requestKeys;
@@ -41,9 +44,7 @@ exports.checkEmptyValues = async function(req, res, keys) {
   });
 
   if (error) {
-    return res.status(400).send({
-      error: 'Fields cannot be empty.'
-    });
+    return false;
   }
 };
 
@@ -123,13 +124,13 @@ exports.updateInstance = async function(req, res, model) {
   const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance.length === 0 || instance === null) {
-    res.status(500).send({
+    return res.status(500).send({
       error: `Error updating ${instanceName} with id=${req.params.id}.`
     });
   }
 
   if (instance != 1) {
-    res.status(400).send({
+    return res.status(400).send({
       error: `Cannot update ${instanceName} with id=${req.params.id}. Maybe ${instanceName} was not found or fields are empty.`
     });
   }

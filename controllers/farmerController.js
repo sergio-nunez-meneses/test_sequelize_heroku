@@ -113,7 +113,20 @@ exports.findOne = ash(async function(req, res) {
 
 exports.update = ash(async function(req, res) {
   const keys = await mainController.checkEmptyFields(req, res);
-  await mainController.checkEmptyValues(req, res, keys);
+
+  if (!keys) {
+    return res.status(400).send({
+      error: 'Request cannot be empty.'
+    });
+  }
+
+  const values = await mainController.checkEmptyValues(req, res, keys);
+
+  if (!values) {
+    return res.status(400).send({
+      error: 'Fields cannot be empty.'
+    });
+  }
 
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.updateInstance(req, res, model);
