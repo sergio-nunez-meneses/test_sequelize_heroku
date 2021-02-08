@@ -47,6 +47,8 @@ exports.checkEmptyValues = async function(req, res, keys) {
   if (error) {
     return false;
   }
+
+  return true;
 };
 
 exports.createInstance = async function(req, res, schema, model) {

@@ -216,7 +216,7 @@ exports.deleteAll = ash(async function(req, res) {
 exports.deleteOne = ash(async function(req, res) {
   const model = await mainController.getModelNameFromUrl(req);
   await mainController.deleteOneInstance(req, res, model);
-  
+
   // console.log(req.params); // debug
   //
   // const id = { id: req.params.id };
