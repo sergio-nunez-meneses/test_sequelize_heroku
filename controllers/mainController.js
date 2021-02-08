@@ -17,6 +17,36 @@ exports.getModelNameFromUrl = async function(req) {
   return model;
 }
 
+exports.checkEmptyFields = async function(req, res) {
+  console.log(req.body); // debug
+
+  const requestKeys = Object.keys(req.body);
+
+  if (requestKeys.length === 0) {
+    res.status(400).send({
+      error: 'Request cannot be empty.'
+    });
+  }
+
+  return requestKeys;
+};
+
+exports.checkEmptyValues = async function(req, res, keys) {
+  var error;
+
+  keys.forEach(await function(key) {
+    if (req.body[key] === '' || req.body[key] === undefined || req.body[key] === null) {
+      error = true;
+    }
+  });
+
+  if (error) {
+    res.status(400).send({
+      error: 'Fields cannot be empty.'
+    });
+  }
+};
+
 exports.findAllInstances = async function(req, res, model) {
   console.log(req.query); // debug
 
@@ -53,4 +83,31 @@ exports.findOneInstance = async function(req, res, model) {
   }
 
   res.status(200).send(instance);
+};
+
+exports.updateInstance = async function(req, res, model) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const instance = await model[0].update(
+    { ...req.body },
+    { where: id }
+  );
+  const instanceName = model[1].substring(0, model[1] - 1);
+
+  if (instance.length === 0 || instance === null) {
+    res.status(500).send({
+      error: `Error updating ${instanceName} with id=${req.params.id}.`
+    });
+  }
+
+  if (instance != 1) {
+    res.status(400).send({
+      error: `Cannot update ${instanceName} with id=${req.params.id}. Maybe ${instanceName} was not found or fields are empty.`
+    });
+  }
+
+  res.status(200).send({
+    message: `${instanceName} updated successfully!`
+  });
 };
