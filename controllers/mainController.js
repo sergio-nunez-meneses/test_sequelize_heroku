@@ -59,13 +59,38 @@ exports.createInstance = async function(req, res, schema, model) {
     });
   }
 
-  const instance = await model[0].create(
-    { ...req.body }
-  );
+  const entryName = req.body.name;
+  var instance = await model[0].findOne({
+    where: {
+      name: entryName
+    }
+  });
   const instanceName = model[1].substring(0, model[1].length - 1);
 
+  if (instance !== null) {
+    return res.status(500).send({
+      error: `${instanceName} name=${entryName} already exists.`
+    });
+  }
+
+  if (instanceName === 'users') {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    instance = await model[0].create({
+      name: entryName,
+      email: req.body.email,
+      password: hashedPassword,
+      role: req.body.role,
+      token: '{}'
+    });
+  } else {
+    instance = await model[0].create(
+      { ...req.body }
+    );
+  }
+
   if (instance.length === 0) {
-    res.status(500).send({
+    return res.status(500).send({
       error: `An error occurred while creating ${instanceName}.`
     });
   }

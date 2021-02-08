@@ -2,6 +2,7 @@ const db = require('../models/index');
 const ash = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
+const mainController = require('./mainController');
 
 const Joi = require('joi');
 const createSchema = Joi.object({
@@ -48,61 +49,61 @@ const signInSchema = Joi.object({
 })
 
 exports.create = ash(async function(req, res) {
-  console.log(req.body); // debug
+  const keys = await mainController.checkEmptyFields(req, res);
 
-  const requestKeys = Object.keys(req.body);
-
-  if (requestKeys.length === 0) {
-    res.status(400).send({
-      error: 'Fields cannot be empty.'
+  if (!keys) {
+    return res.status(400).send({
+      error: 'Request cannot be empty.'
     });
-    return;
   }
 
-  const formValidation = createSchema.validate(req.body);
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.createInstance(req, res, createSchema, model);
 
-  if (formValidation.error) {
-    res.status(400).send({
-      error: formValidation.error.details[0].message
-    });
-    return;
-  }
-
-  const userName = req.body.name;
-  var user = await db.User.findOne({
-    where: {
-      name: userName
-    }
-  });
-
-  if (user !== null) {
-    res.status(500).send({
-      error: `User name=${userName} already exists.`
-    });
-    return;
-  }
-
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-  user = await db.User.create({
-    name: userName,
-    email: req.body.email,
-    password: hashedPassword,
-    role: req.body.role,
-    token: '{}'
-  });
-
-  if (user.length === 0) {
-    res.status(500).send({
-      error: 'An error occurred while creating user.'
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: 'User created successfully!'
-  });
-  return;
+  // const formValidation = await createSchema.validate(req.body);
+  //
+  // if (formValidation.error) {
+  //   res.status(400).send({
+  //     error: formValidation.error.details[0].message
+  //   });
+  //   return;
+  // }
+  //
+  // const userName = req.body.name;
+  // var user = await db.User.findOne({
+  //   where: {
+  //     name: userName
+  //   }
+  // });
+  //
+  // if (user !== null) {
+  //   res.status(500).send({
+  //     error: `User name=${userName} already exists.`
+  //   });
+  //   return;
+  // }
+  //
+  // const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  //
+  // user = await db.User.create({
+  //   name: userName,
+  //   email: req.body.email,
+  //   password: hashedPassword,
+  //   role: req.body.role,
+  //   token: '{}'
+  // });
+  //
+  // if (user.length === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while creating user.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: 'User created successfully!'
+  // });
+  // return;
 });
 
 exports.findAll = ash(async function(req, res) {
