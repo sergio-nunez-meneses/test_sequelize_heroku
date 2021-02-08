@@ -192,22 +192,25 @@ exports.update = ash(async function(req, res) {
 });
 
 exports.deleteAll = ash(async function(req, res) {
-  const farms = await db.Farm.destroy({
-    where: {},
-    truncate: false
-  });
-
-  if (farms === 0) {
-    res.status(500).send({
-      error: 'An error occurred while removing all farms. Maybe farms were not found.'
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: `${farms} farms deleted successfully!`
-  });
-  return;
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.deleteAllInstances(req, res, model);
+  
+  // const farms = await db.Farm.destroy({
+  //   where: {},
+  //   truncate: false
+  // });
+  //
+  // if (farms === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while removing all farms. Maybe farms were not found.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: `${farms} farms deleted successfully!`
+  // });
+  // return;
 });
 
 exports.deleteOne = ash(async function(req, res) {

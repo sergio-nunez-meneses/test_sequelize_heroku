@@ -147,13 +147,13 @@ exports.deleteAllInstances = async function(req, res, model) {
   });
 
   if (instances === 0) {
-    res.status(500).send({
+    return res.status(500).send({
       error: `An error occurred while removing all ${model[1]}. Maybe ${model[1]} were not found.`
     });
   }
 
   res.status(200).send({
-    message: `${instances} farmers deleted successfully!`
+    message: `${instances} ${model[1]} deleted successfully!`
   });
 };
 
