@@ -200,6 +200,25 @@ exports.update = ash(async function(req, res) {
   return;
 });
 
+exports.deleteAll = ash(async function(req, res) {
+  const users = await db.User.destroy({
+    where: {},
+    truncate: false
+  });
+
+  if (users === 0) {
+    res.status(500).send({
+      error: 'An error occurred while removing all users. Maybe users were not found.'
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: `${users} users deleted successfully!`
+  });
+  return;
+});
+
 exports.signIn = ash(async function(req, res) {
   console.log(req.body); // debug
 
