@@ -91,7 +91,7 @@ exports.findOne = ash(async function(req, res) {
 
   if (farm === null) {
     res.status(500).send({
-      error: `Error retrieving farm with id=' + ${req.params.id}. Maybe farm was not found.`
+      error: `Error retrieving farm with id=${req.params.id}. Maybe farm was not found.`
     });
     return;
   }

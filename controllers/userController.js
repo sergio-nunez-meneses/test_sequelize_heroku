@@ -127,6 +127,25 @@ exports.findAll = ash(async function(req, res) {
   return;
 });
 
+exports.findOne = ash(async function(req, res) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const user = await db.User.findOne({
+    where: id
+  });
+
+  if (user === null) {
+    res.status(500).send({
+      error: `Error retrieving user with id=${req.params.id}. Maybe user was not found.`
+    });
+    return;
+  }
+
+  res.status(200).send(user);
+  return;
+});
+
 exports.signIn = ash(async function(req, res) {
   console.log(req.body); // debug
 
