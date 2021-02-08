@@ -132,22 +132,25 @@ exports.findAll = ash(async function(req, res) {
 });
 
 exports.findOne = ash(async function(req, res) {
-  console.log(req.params); // debug
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.findOneInstance(req, res, model);
 
-  const id = { id: req.params.id };
-  const user = await db.User.findOne({
-    where: id
-  });
-
-  if (user === null) {
-    res.status(500).send({
-      error: `Error retrieving user with id=${req.params.id}. Maybe user was not found.`
-    });
-    return;
-  }
-
-  res.status(200).send(user);
-  return;
+  // console.log(req.params); // debug
+  //
+  // const id = { id: req.params.id };
+  // const user = await db.User.findOne({
+  //   where: id
+  // });
+  //
+  // if (user === null) {
+  //   res.status(500).send({
+  //     error: `Error retrieving user with id=${req.params.id}. Maybe user was not found.`
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send(user);
+  // return;
 });
 
 exports.update = ash(async function(req, res) {
