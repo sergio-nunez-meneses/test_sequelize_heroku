@@ -227,22 +227,25 @@ exports.update = ash(async function(req, res) {
 });
 
 exports.deleteAll = ash(async function(req, res) {
-  const users = await db.User.destroy({
-    where: {},
-    truncate: false
-  });
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.deleteAllInstances(req, res, model);
 
-  if (users === 0) {
-    res.status(500).send({
-      error: 'An error occurred while removing all users. Maybe users were not found.'
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: `${users} users deleted successfully!`
-  });
-  return;
+  // const users = await db.User.destroy({
+  //   where: {},
+  //   truncate: false
+  // });
+  //
+  // if (users === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while removing all users. Maybe users were not found.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: `${users} users deleted successfully!`
+  // });
+  // return;
 });
 
 exports.deleteOne = ash(async function(req, res) {
