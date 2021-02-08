@@ -285,19 +285,17 @@ exports.signIn = ash(async function(req, res) {
   const requestKeys = Object.keys(req.body);
 
   if (requestKeys.length === 0) {
-    res.status(400).send({
+    return res.status(400).send({
       error: 'Fields cannot be empty.'
     });
-    return;
   }
 
-  const formValidation = signInSchema.validate(req.body);
+  const formValidation = await signInSchema.validate(req.body);
 
   if (formValidation.error) {
-    res.status(400).send({
+    return res.status(400).send({
       error: formValidation.error.details[0].message
     });
-    return;
   }
 
   const userEmail = { email: req.body.email };
@@ -306,19 +304,17 @@ exports.signIn = ash(async function(req, res) {
   });
 
   if (user === null) {
-    res.status(500).send({
+    return res.status(500).send({
       error: `User with email=${userEmail} doesn't exist.`
     });
-    return;
   }
 
   const passwordValidation = await bcrypt.compare(req.body.password, user.password);
 
   if (!passwordValidation) {
-    res.status(400).send({
+    return res.status(400).send({
       error: 'Invalid password.'
     });
-    return;
   }
 
   const token = {};
@@ -330,16 +326,14 @@ exports.signIn = ash(async function(req, res) {
   user = await user.save();
 
   if (user.length === 0) {
-    res.status(500).send({
+    return res.status(500).send({
       error: 'An error occurred while signing in user.'
     });
-    return;
   }
 
   res.status(200).send({
     message: 'User signed in successfully!'
   });
-  return;
 });
 
 exports.signOut = ash(async function(req, res) {
@@ -352,10 +346,9 @@ exports.signOut = ash(async function(req, res) {
   });
 
   if (user === null) {
-    res.status(500).send({
+    return res.status(500).send({
       error: `Cannot sign out user with token=${req.session.id}. Maybe user was not found.`
     });
-    return;
   }
 
   const token = JSON.parse(user.dataValues.token);
@@ -365,14 +358,12 @@ exports.signOut = ash(async function(req, res) {
   user = await user.save();
 
   if (user.length === 0) {
-    res.status(500).send({
+    return res.status(500).send({
       error: 'An error occurred while signing out user.'
     });
-    return;
   }
 
   res.status(200).send({
     message: 'User signed out successfully!'
   });
-  return;
 });
