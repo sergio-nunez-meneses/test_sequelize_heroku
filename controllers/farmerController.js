@@ -1,6 +1,7 @@
 const db = require('../models/index');
 const ash = require('express-async-handler');
 const { Op } = require('sequelize');
+const mainController = require('./mainController');
 
 const Joi = require('joi');
 const schema = Joi.object({
@@ -59,25 +60,26 @@ exports.create = ash(async function(req, res) {
 });
 
 exports.findAll = ash(async function(req, res) {
-  console.log(req.query); // debug
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.findAllInstances(req, res, model);
 
-  const name = req.query.name;
-  const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
-
-  const farmers = await db.Farmer.findAll({
-    limit: 5,
-    where: condition
-  });
-
-  if (farmers.length === 0) {
-    res.status(500).send({
-      error: 'An error occurred while retrieving  farmers. Maybe farmers were not found.'
-    });
-    return;
-  }
-
-  res.status(200).send(farmers);
-  return;
+  // const name = req.query.name;
+  // const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+  //
+  // const farmers = await db.Farmer.findAll({
+  //   limit: 5,
+  //   where: condition
+  // });
+  //
+  // if (farmers.length === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while retrieving  farmers. Maybe farmers were not found.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send(farmers);
+  // return;
 });
 
 exports.findOne = ash(async function(req, res) {
