@@ -74,7 +74,7 @@ exports.findOneInstance = async function(req, res, model) {
   const instance = await model[0].findOne({
     where: id
   });
-  const instanceName = model[1].substring(0, model[1] - 1);
+  const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance === null) {
     res.status(500).send({
@@ -93,7 +93,7 @@ exports.updateInstance = async function(req, res, model) {
     { ...req.body },
     { where: id }
   );
-  const instanceName = model[1].substring(0, model[1] - 1);
+  const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance.length === 0 || instance === null) {
     res.status(500).send({
