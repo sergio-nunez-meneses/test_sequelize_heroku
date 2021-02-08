@@ -136,7 +136,7 @@ exports.update = ash(async function(req, res) {
 
   if (farm.length === 0 || farm === null) {
     res.status(500).send({
-      error: `Error updating farm with id=' + ${req.params.id}.`
+      error: `Error updating farm with id=${req.params.id}.`
     });
     return;
   }
@@ -149,7 +149,7 @@ exports.update = ash(async function(req, res) {
   }
 
   res.status(200).send({
-    message: 'Farmer updated successfully!'
+    message: 'Farm updated successfully!'
   });
   return;
 });
