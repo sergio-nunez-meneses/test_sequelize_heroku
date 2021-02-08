@@ -105,6 +105,28 @@ exports.create = ash(async function(req, res) {
   return;
 });
 
+exports.findAll = ash(async function(req, res) {
+  console.log(req.query); // debug
+
+  const name = req.query.name;
+  const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+
+  const users = await db.User.findAll({
+    limit: 5,
+    where: condition
+  });
+
+  if (users.length === 0) {
+    res.status(500).send({
+      error: 'An error occurred while retrieving  users. Maybe users were not found.'
+    });
+    return;
+  }
+
+  res.status(200).send(users);
+  return;
+});
+
 exports.signIn = ash(async function(req, res) {
   console.log(req.body); // debug
 
