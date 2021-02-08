@@ -24,39 +24,46 @@ const schema = Joi.object({
 });
 
 exports.create = ash(async function(req, res) {
-  console.log(req.body); // debug
+  await mainController.checkEmptyFields(req, res);
 
-  if (requestKeys.length === 0) {
-    res.status(400).send({
-      error: 'Fields cannot be empty.'
-    });
-    return;
-  }
+  const model = await mainController.getModelNameFromUrl(req);
+  await mainController.createInstance(req, res, schema, model);
 
-  const formValidation = schema.validate(req.body);
-
-  if (formValidation.error) {
-    res.status(400).send({
-      error: formValidation.error.details[0].message
-    });
-    return;
-  }
-
-  const farmer = await db.Farmer.create(
-    { ...req.body }
-  );
-
-  if (farmer.length === 0) {
-    res.status(500).send({
-      error: 'An error occurred while creating farmer.'
-    });
-    return;
-  }
-
-  res.status(200).send({
-    message: 'Farmer created successfully!'
-  });
-  return;
+  // console.log(req.body); // debug
+  //
+  // const requestKeys = Object.keys(req.body);
+  //
+  // if (requestKeys.length === 0) {
+  //   res.status(400).send({
+  //     error: 'Fields cannot be empty.'
+  //   });
+  //   return;
+  // }
+  //
+  // const formValidation = schema.validate(req.body);
+  //
+  // if (formValidation.error) {
+  //   res.status(400).send({
+  //     error: formValidation.error.details[0].message
+  //   });
+  //   return;
+  // }
+  //
+  // const farmer = await db.Farmer.create(
+  //   { ...req.body }
+  // );
+  //
+  // if (farmer.length === 0) {
+  //   res.status(500).send({
+  //     error: 'An error occurred while creating farmer.'
+  //   });
+  //   return;
+  // }
+  //
+  // res.status(200).send({
+  //   message: 'Farmer created successfully!'
+  // });
+  // return;
 });
 
 exports.findAll = ash(async function(req, res) {

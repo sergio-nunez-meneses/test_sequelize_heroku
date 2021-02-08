@@ -47,6 +47,33 @@ exports.checkEmptyValues = async function(req, res, keys) {
   }
 };
 
+exports.createInstance = async function(req, res, schema, model) {
+  console.log(req.body); // debug
+
+  const formValidation = await schema.validate(req.body);
+
+  if (formValidation.error) {
+    res.status(400).send({
+      error: formValidation.error.details[0].message
+    });
+  }
+
+  const instance = await model[0].create(
+    { ...req.body }
+  );
+  const instanceName = model[1].substring(0, model[1].length - 1);
+
+  if (instance.length === 0) {
+    res.status(500).send({
+      error: `An error occurred while creating ${instanceName}.`
+    });
+  }
+
+  res.status(200).send({
+    message: `${instanceName} created successfully!`
+  });
+};
+
 exports.findAllInstances = async function(req, res, model) {
   console.log(req.query); // debug
 
