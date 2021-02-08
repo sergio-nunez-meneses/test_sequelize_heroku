@@ -219,6 +219,34 @@ exports.deleteAll = ash(async function(req, res) {
   return;
 });
 
+exports.deleteOne = ash(async function(req, res) {
+  console.log(req.params); // debug
+
+  const id = { id: req.params.id };
+  const user = await db.User.destroy({
+    where: id
+  });
+
+  if (user.length === 0 || user === null) {
+    res.status(500).send({
+      error: `Couldn't delete user with id=${req.params.id}.`
+    });
+    return;
+  }
+
+  if (user != 1) {
+    res.status(400).send({
+      error: `Cannot delete user with id=${req.params.id}. Maybe user was not found.`
+    });
+    return;
+  }
+
+  res.status(200).send({
+    message: 'User deleted successfully!'
+  });
+  return;
+});
+
 exports.signIn = ash(async function(req, res) {
   console.log(req.body); // debug
 

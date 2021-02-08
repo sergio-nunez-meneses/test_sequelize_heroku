@@ -183,7 +183,7 @@ exports.deleteOne = ash(async function(req, res) {
 
   if (farm.length === 0 || farm === null) {
     res.status(500).send({
-      error: `Couldn't delete farm with id=' + ${req.params.id}.`
+      error: `Couldn't delete farm with id=${req.params.id}.`
     });
     return;
   }
