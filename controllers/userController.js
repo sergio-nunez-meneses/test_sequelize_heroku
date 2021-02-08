@@ -31,7 +31,7 @@ const createSchema = Joi.object({
 })
   .with('password', 'confirmPassword');
 
-const signSchema = Joi.object({
+const signInSchema = Joi.object({
   email: Joi.string()
     .min(5)
     .email({
@@ -105,7 +105,7 @@ exports.create = ash(async function(req, res) {
   return;
 });
 
-exports.sign = ash(async function(req, res) {
+exports.signIn = ash(async function(req, res) {
   console.log(req.body); // debug
 
   const requestKeys = Object.keys(req.body);
@@ -117,7 +117,7 @@ exports.sign = ash(async function(req, res) {
     return;
   }
 
-  const formValidation = signSchema.validate(req.body);
+  const formValidation = signInSchema.validate(req.body);
 
   if (formValidation.error) {
     res.status(400).send({
@@ -149,19 +149,15 @@ exports.sign = ash(async function(req, res) {
 
   const token = {};
   var date = new Date(Date.now());
-  date.setHours(date.getHours() + 1)
-
+  date.setHours(date.getHours() + 1);
   token[req.session.id] = date;
 
-  user = await db.User.update({
-    token: JSON.stringify(token)
-  }, {
-    where: userEmail
-  });
+  user.token = JSON.stringify(token);
+  user = await user.save();
 
-  if (user != 1) {
+  if (user.length === 0) {
     res.status(500).send({
-      error: `Cannot sign in user with email=${req.body.email}. Maybe user was not found or fields are empty.`
+      error: 'An error occurred while signing in user.'
     });
     return;
   }
