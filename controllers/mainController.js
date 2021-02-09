@@ -4,19 +4,21 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 
 exports.getModelNameFromUrl = async function(req) {
+  var data = [];
   const url = req.originalUrl.split('/');
   const endpoint = url[2].includes('?') ? url[2].split('?')[0] : url[2];
-  var model = [];
+
+  data.push(endpoint);
 
   if (endpoint === 'farmers') {
-    model.push(db.Farmer, endpoint);
+    data.unshift(db.Farmer);
   } else if (endpoint === 'farms') {
-    model.push(db.Farm, endpoint);
+    data.unshift(db.Farm);
   } else if (endpoint === 'users') {
-    model.push(db.User, endpoint);
+    data.unshift(db.User);
   }
 
-  return model;
+  return data;
 }
 
 exports.checkEmptyFields = async function(req, res) {
@@ -101,12 +103,19 @@ exports.createInstance = async function(req, res, schema, model) {
 };
 
 exports.findAllInstances = async function(req, res, model) {
-  const name = req.query.name;
-  const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+  var keys;
+
+  if (Object.keys(req.query).length > 0) {
+    keys = Object.keys(req.query);
+
+    for (var key of keys) {
+      req.query[key] = { [Op.like]: `%${req.query[key]}%` };
+    }
+  }
 
   const instances = await model[0].findAll({
     limit: 5,
-    where: condition
+    where: req.query
   });
 
   if (instances.length === 0) {

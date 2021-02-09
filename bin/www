@@ -47,10 +47,10 @@ models.sequelize.sync({ force: true })
     ];
 
     const farmNames = [
-      'Ma première ferme',
-      'Ma deuxième ferme',
-      'Ma troisième ferme',
-      'Ma quatrième ferme'
+      'Ma Première Ferme',
+      'Ma Deuxième Ferme',
+      'Ma Troisième Ferme',
+      'Ma Quatrième Ferme'
     ];
 
     const farmAddresses = [
