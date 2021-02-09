@@ -20,8 +20,6 @@ exports.getModelNameFromUrl = async function(req) {
 }
 
 exports.checkEmptyFields = async function(req, res) {
-  console.log(req.body); // debug
-
   var requestKeys = await Object.keys(req.body);
   var error;
 
@@ -53,8 +51,6 @@ exports.checkEmptyValues = async function(req, res, keys) {
 };
 
 exports.createInstance = async function(req, res, schema, model) {
-  console.log(req.body); // debug
-
   const formValidation = await schema.validate(req.body);
 
   if (formValidation.error) {
@@ -105,8 +101,6 @@ exports.createInstance = async function(req, res, schema, model) {
 };
 
 exports.findAllInstances = async function(req, res, model) {
-  console.log(req.query); // debug
-
   const name = req.query.name;
   const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
@@ -125,8 +119,6 @@ exports.findAllInstances = async function(req, res, model) {
 };
 
 exports.findOneInstance = async function(req, res, model) {
-  console.log(req.params); // debug
-
   const id = { id: req.params.id };
   const instance = await model[0].findOne({
     where: id
@@ -143,8 +135,6 @@ exports.findOneInstance = async function(req, res, model) {
 };
 
 exports.updateInstance = async function(req, res, model) {
-  console.log(req.params); // debug
-
   const id = { id: req.params.id };
   const instance = await model[0].update(
     { ...req.body },
@@ -187,8 +177,6 @@ exports.deleteAllInstances = async function(req, res, model) {
 };
 
 exports.deleteOneInstance = async function(req, res, model) {
-  console.log(req.params); // debug
-
   const id = { id: req.params.id };
   const instance = await model[0].destroy({
     where: id

@@ -19,7 +19,6 @@ if (process.env.DATABASE_URL) {
   })
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
-  console.log('Successfully connected to database!');
 }
 
 fs

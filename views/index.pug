@@ -1,32 +1,5 @@
 extends layout
 
 block content
-  
-  div.container-fluid.text-justify
-    form#delete(action="/deleteFarmer", method="POST")
-      
-    div.container.my-auto.text-right
-      a.ml-0.mr-1.btn.btn-lg.bg-success.text-decoration-none.text-white(href="/insertFarmer") Insert
-      a.ml-1.mr-0.btn.btn-lg.bg-success.text-decoration-none.text-white(href="/logout") Logout
-      
-    div.container.my-5
-      h1.display-4 Current stored farmers
-      table.table.table-striped.table-hover.table-bordered.my-3
-        thead.bg-success.text-white.text-left
-          tr
-            th(scope="col") ID
-            th(scope="col") Name
-            th(scope="col") Address
-            th(scope="col") City
-            th(scope="col") Location
-            th(scope="col") Action
-        tbody
-          for farmer in farmers
-            tr
-              td.text-center #{farmer.id}
-              td #{farmer.name}
-              td #{farmer.address}
-              td #{farmer.city}
-              td #{farmer.coordinates}
-              td
-                a.mx-auto.btn.bg-primary(href="/editFarmer/" + farmer.id) Edit
+  h1= title
+  p Welcome to #{title}
