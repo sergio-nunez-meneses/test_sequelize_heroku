@@ -9,7 +9,7 @@ express folder_name --view=pug
 Installed dependencies:
 
 ```
-npm install bcrypt cookie-parser cors debug express express-async-handler express-session fs http-errors joi jsonwebtoken mongoose morgan mysql2 nodemon pg pg-hstore pug sequelize --save
+npm install bcrypt cookie-parser cors debug express express-async-handler express-session fs http-errors joi jsonwebtoken morgan mysql2 nodemon pg pg-hstore pug sequelize --save
 ```
 
 ### API
