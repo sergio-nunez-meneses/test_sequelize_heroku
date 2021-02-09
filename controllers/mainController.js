@@ -61,17 +61,15 @@ exports.createInstance = async function(req, res, schema, model) {
     });
   }
 
-  const entryName = req.body.name;
+  const name = { name: req.body.name };
   var instance = await model[0].findOne({
-    where: {
-      name: entryName
-    }
+    where: name
   });
   const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance !== null) {
     return res.status(500).send({
-      error: `${instanceName} name=${entryName} already exists.`
+      error: `${instanceName} name=${req.body.name} already exists.`
     });
   }
 
@@ -79,7 +77,7 @@ exports.createInstance = async function(req, res, schema, model) {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     instance = await model[0].create({
-      name: entryName,
+      name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
       role: req.body.role,
