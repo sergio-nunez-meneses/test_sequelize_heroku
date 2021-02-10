@@ -2,10 +2,7 @@ process.env.TZ = 'Europe/Paris';
 
 const crypto = require('crypto');
 const fs = require('fs');
-
 const dummyData = require('../config/data');
-const privateKey = fs.readFileSync('../keys/private.key', 'utf8');
-const publicKey = fs.readFileSync('../keys/public.key', 'utf8');
 const algo = {
   HS256: 'SHA256',
   HS384: 'SHA384',
@@ -18,25 +15,33 @@ const algo = {
   ES512: 'RSA-SHA512'
 };
 
-const header = createHeader(algo['RS256']);
-const payload = createPayload({
-  userId: dummyData['id'],
-  userRole: dummyData['role']
-}, 20);
+console.log('generated jwt:');
+console.log(generateJwt(
+  algo['RS256'],
+  {
+    userId: dummyData['id'],
+    userRole: dummyData['role']
+  },
+  15
+));
 
-var tokenStructure = [
-  encodeTokenStructure(header),
-  encodeTokenStructure(payload)
-];
+function generateJwt(algo, userData, exp) {
+  const header = createHeader(algo);
+  const payload = createPayload(userData, exp);
 
-const signatureInput = tokenStructure.join('.');
-const signature = createSignature(algo['RS256'], privateKey, signatureInput);
+  var tokenStructure = [
+    encodeTokenStructure(header),
+    encodeTokenStructure(payload)
+  ];
 
-tokenStructure.push(base64UrlEncode(signature));
-const jwt = tokenStructure.join('.');
+  const signInput = tokenStructure.join('.');
+  const privateKey = getPrivateKey();
+  const signature = createSignature(algo, privateKey, signInput);
 
-console.log('generated jwt:', jwt);
-console.log('valid jwt?', verifySignature(algo['RS256'], publicKey, signature, signatureInput));
+  tokenStructure.push(base64UrlEncode(signature));
+
+  return tokenStructure.join('.');
+}
 
 function createHeader(algo) {
   return {
@@ -65,13 +70,19 @@ function createSignature(algo, privateKey, data) {
     .sign(privateKey);
 }
 
-
-
 function verifySignature(algo, publicKey, signature, data) {
   return crypto
     .createVerify(algo)
     .update(data)
     .verify(publicKey, signature);
+}
+
+function getPrivateKey() {
+  return fs.readFileSync('../keys/private.key', 'utf8');
+}
+
+function getPublicKey() {
+  return fs.readFileSync('../keys/public.key', 'utf8');
 }
 
 function encodeTokenStructure(tokenPart) {
