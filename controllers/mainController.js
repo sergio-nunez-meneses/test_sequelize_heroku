@@ -63,9 +63,7 @@ exports.createInstance = async function(req, res, schema, model) {
   }
 
   const name = { name: req.body.name };
-  var instance = await model[0].findOne({
-    where: name
-  });
+  var instance = await mainRepository.find(model[0], name);
   const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance !== null) {
@@ -74,21 +72,7 @@ exports.createInstance = async function(req, res, schema, model) {
     });
   }
 
-  if (instanceName === 'user') {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    instance = await model[0].create({
-      name: req.body.name,
-      email: req.body.email,
-      password: hashedPassword,
-      role: req.body.role,
-      token: '{}'
-    });
-  } else {
-    instance = await model[0].create(
-      { ...req.body }
-    );
-  }
+  instance = await mainRepository.createOne(model[0], req.body, instanceName);
 
   if (instance.length === 0) {
     return res.status(500).send({
@@ -125,9 +109,7 @@ exports.findAllInstances = async function(req, res, model) {
 
 exports.findOneInstance = async function(req, res, model) {
   const id = { id: req.params.id };
-  const instance = await model[0].findOne({
-    where: id
-  });
+  const instance = await mainRepository.find(model[0], id);
   const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance === null) {
