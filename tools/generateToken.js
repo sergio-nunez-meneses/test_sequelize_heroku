@@ -1,8 +1,21 @@
-const data = require('../config/data');
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
+const crypto = require('crypto');
 const uuid = require('uuid');
+const fs = require('fs');
+
+const dummyData = require('../config/data');
 const privateKey = fs.readFileSync('../keys/private.key', 'utf8');
+const publicKey = fs.readFileSync('../keys/public.key', 'utf8');
+const algo = {
+  HS256: 'SHA256',
+  HS384: 'SHA384',
+  HS512: 'SHA512',
+  RS256: 'RSA-SHA256',
+  RS384: 'RSA-SHA384',
+  RS512: 'RSA-SHA512',
+  ES256: 'RSA-SHA256',
+  ES384: 'RSA-SHA384',
+  ES512: 'RSA-SHA512'
+};
 
 const header = {
   typ: 'JWT',
@@ -11,8 +24,8 @@ const header = {
 
 const payload = {
   user: {
-    id: data['id'],
-    role: data['role'],
+    id: dummyData['id'],
+    role: dummyData['role'],
   },
   kid: uuid.v4(),
   exp: 60,
@@ -23,10 +36,24 @@ const encodedHeader = encodeTokenStructure(header);
 const encodedPayload = encodeTokenStructure(payload);
 const signatureInput = encodedHeader.concat('.', encodedPayload);
 
-console.log('encoded header:', encodedHeader);
-console.log('decoded header:', encodedPayload);
-console.log('encoded payload:', decodeTokenStructure(encodedHeader));
-console.log('decoded payload:', decodeTokenStructure(encodedPayload));
+const signature = createSignature(algo['RS256'], privateKey, signatureInput);
+
+console.log(signature);
+console.log(verifySignature(algo['RS256'], publicKey, signature, signatureInput));
+
+function createSignature(algo, privateKey, data) {
+  return crypto
+    .createSign(algo)
+    .update(data)
+    .sign(privateKey);
+}
+
+function verifySignature(algo, publicKey, signature, data) {
+  return crypto
+    .createVerify(algo)
+    .update(data)
+    .verify(publicKey, signature);
+}
 
 function encodeTokenStructure(tokenPart) {
   return base64UrlEncode(JSON.stringify(tokenPart));
