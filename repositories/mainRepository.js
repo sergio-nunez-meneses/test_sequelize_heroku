@@ -31,3 +31,10 @@ exports.find = ash(async function() {
     });
   }
 });
+
+exports.updateOne = ash(async function(model, reqBody, id) {
+  return await model.update(
+    { ...reqBody },
+    { where: id }
+  );
+});

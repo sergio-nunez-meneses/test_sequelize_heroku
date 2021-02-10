@@ -123,10 +123,7 @@ exports.findOneInstance = async function(req, res, model) {
 
 exports.updateInstance = async function(req, res, model) {
   const id = { id: req.params.id };
-  const instance = await model[0].update(
-    { ...req.body },
-    { where: id }
-  );
+  const instance = await mainRepository.updateOne(model[0], req.body, id);
   const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance.length === 0 || instance === null) {
