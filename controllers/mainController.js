@@ -144,10 +144,7 @@ exports.updateInstance = async function(req, res, model) {
 };
 
 exports.deleteAllInstances = async function(req, res, model) {
-  const instances = await model[0].destroy({
-    where: {},
-    truncate: false
-  });
+  const instances = await mainRepository.delete(model[0]);
 
   if (instances === 0) {
     return res.status(500).send({
@@ -162,9 +159,7 @@ exports.deleteAllInstances = async function(req, res, model) {
 
 exports.deleteOneInstance = async function(req, res, model) {
   const id = { id: req.params.id };
-  const instance = await model[0].destroy({
-    where: id
-  });
+  const instance = await mainRepository.delete(model[0], id);
   const instanceName = model[1].substring(0, model[1].length - 1);
 
   if (instance.length === 0 || instance === null) {

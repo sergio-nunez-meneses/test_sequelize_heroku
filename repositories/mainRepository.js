@@ -38,3 +38,16 @@ exports.updateOne = ash(async function(model, reqBody, id) {
     { where: id }
   );
 });
+
+exports.delete = ash(async function() {
+  if (arguments.length > 1) {
+    return await arguments[0].destroy({
+      where: arguments[1]
+    });
+  }
+
+  return await arguments[0].destroy({
+    where: {},
+    truncate: false
+  });
+});
