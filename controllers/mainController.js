@@ -22,7 +22,7 @@ exports.getModelNameFromUrl = async function(req) {
 }
 
 exports.checkEmptyFields = async function(req, res) {
-  var requestKeys = await Object.keys(req.body);
+  const requestKeys = await Object.keys(req.body);
   var error;
 
   if (requestKeys.length === 0) {
@@ -39,7 +39,7 @@ exports.checkEmptyFields = async function(req, res) {
 exports.checkEmptyValues = async function(req, res, keys) {
   var error;
 
-  await keys.forEach(function(key) {
+  keys.forEach(function(key) {
     if (req.body[key] === '' || req.body[key] === undefined || req.body[key] === null) {
       error = true;
     }
