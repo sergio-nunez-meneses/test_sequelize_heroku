@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const uuid = require('uuid');
 const fs = require('fs');
 
 const dummyData = require('../config/data');
@@ -17,20 +16,11 @@ const algo = {
   ES512: 'RSA-SHA512'
 };
 
-const header = {
-  typ: 'JWT',
-  alg: 'RS256'
-};
-
-const payload = {
-  user: {
-    id: dummyData['id'],
-    role: dummyData['role'],
-  },
-  kid: uuid.v4(),
-  exp: 60,
-  iss: 'http://localhost:3000'
-};
+const header = createHeader(algo['RS256']);
+const payload = createPayload({
+  userId: dummyData['id'],
+  userRole: dummyData['role']
+}, 60);
 
 var tokenStructure = [
   encodeTokenStructure(header),
@@ -45,6 +35,23 @@ const jwt = tokenStructure.join('.');
 
 console.log('generated jwt:', jwt);
 console.log('valid jwt?', verifySignature(algo['RS256'], publicKey, signature, signatureInput));
+
+function createHeader(algo) {
+  return {
+    typ: 'JWT',
+    alg: algo
+  };
+}
+
+function createPayload(data, exp) {
+  var claims = {
+    exp: exp,
+    iss: dummyData['iss']
+  }
+  var payload = Object.assign(data, claims);
+
+  return payload;
+}
 
 function createSignature(algo, privateKey, data) {
   return crypto
