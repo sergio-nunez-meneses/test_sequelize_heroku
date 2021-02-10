@@ -50,9 +50,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/index'));
-app.use('/api/users', require('./routes/user'));
-app.use('/api/farmers', require('./routes/farmer'));
-app.use('/api/farms', require('./routes/farms'));
+app.use('/api/users', require('./routes/usersRoutes'));
+app.use('/api/farmers', require('./routes/farmersRoutes'));
+app.use('/api/farms', require('./routes/farmsRoutes'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
