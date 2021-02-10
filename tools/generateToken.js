@@ -1,3 +1,5 @@
+process.env.TZ = 'Europe/Paris';
+
 const crypto = require('crypto');
 const fs = require('fs');
 
@@ -20,7 +22,7 @@ const header = createHeader(algo['RS256']);
 const payload = createPayload({
   userId: dummyData['id'],
   userRole: dummyData['role']
-}, 60);
+}, 20);
 
 var tokenStructure = [
   encodeTokenStructure(header),
@@ -44,8 +46,11 @@ function createHeader(algo) {
 }
 
 function createPayload(data, exp) {
+  var setExp = new Date(Date.now());
+  setExp.setMinutes(setExp.getMinutes() + exp);
+
   var claims = {
-    exp: exp,
+    exp: setExp,
     iss: dummyData['iss']
   }
   var payload = Object.assign(data, claims);
@@ -59,6 +64,8 @@ function createSignature(algo, privateKey, data) {
     .update(data)
     .sign(privateKey);
 }
+
+
 
 function verifySignature(algo, publicKey, signature, data) {
   return crypto
