@@ -32,14 +32,19 @@ const payload = {
   iss: 'http://localhost:3000'
 };
 
-const encodedHeader = encodeTokenStructure(header);
-const encodedPayload = encodeTokenStructure(payload);
-const signatureInput = encodedHeader.concat('.', encodedPayload);
+var tokenStructure = [
+  encodeTokenStructure(header),
+  encodeTokenStructure(payload)
+];
 
+const signatureInput = tokenStructure.join('.');
 const signature = createSignature(algo['RS256'], privateKey, signatureInput);
 
-console.log(signature);
-console.log(verifySignature(algo['RS256'], publicKey, signature, signatureInput));
+tokenStructure.push(base64UrlEncode(signature));
+const jwt = tokenStructure.join('.');
+
+console.log('generated jwt:', jwt);
+console.log('valid jwt?', verifySignature(algo['RS256'], publicKey, signature, signatureInput));
 
 function createSignature(algo, privateKey, data) {
   return crypto
