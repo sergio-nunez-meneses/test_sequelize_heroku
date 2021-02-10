@@ -1,9 +1,10 @@
 const crypto = require('crypto');
-const fs = require('fs');
 const encodeFormat = 'pem';
 const publicEncoding = { type: 'spki', format: encodeFormat };
 const privateEncoding = { type: 'pkcs8', format: encodeFormat };
 var keys = [];
+
+const fs = require('fs');
 const path = '../keys/';
 var fileName;
 
