@@ -2,6 +2,7 @@ const db = require('../models/index');
 const ash = require('express-async-handler');
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
+const mainRepository = require('../repositories/mainRepository');
 
 exports.getModelNameFromUrl = async function(req) {
   var data = [];
@@ -111,10 +112,7 @@ exports.findAllInstances = async function(req, res, model) {
     }
   }
 
-  const instances = await model[0].findAll({
-    limit: 5,
-    where: req.query
-  });
+  const instances = await mainRepository.find(model[0], req.query, 5);
 
   if (instances.length === 0) {
     return res.status(500).send({
