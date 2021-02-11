@@ -141,7 +141,6 @@ exports.signIn = ash(async function(req, res) {
   }
 
   const generatedJwt = user.generateJwt(req.session.id);
-  console.log('generated token', generatedJwt);
 
   // const token = {};
   // var date = new Date(Date.now());
@@ -157,9 +156,11 @@ exports.signIn = ash(async function(req, res) {
   //   });
   // }
 
-  res.status(200).send({
-    message: 'User signed in successfully!'
-  });
+  res.header('authorization', 'Bearer ' + generatedJwt)
+    .status(200)
+    .send({
+      message: 'User signed in successfully!'
+    });
 });
 
 exports.signOut = ash(async function(req, res) {
