@@ -172,7 +172,6 @@ exports.signOut = ash(async function(req, res) {
   req.session = null;
   user.token = '{}';
   user = await user.save();
-  user = {};
 
   if (Object.keys(user).length === 0) {
     return res.status(500).send({
