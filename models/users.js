@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         privateKey,
         {
           algorithm: 'RS256',
-          expiresIn: 60000
+          expiresIn: 120
         });
 
         return token;

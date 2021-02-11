@@ -159,9 +159,7 @@ exports.signIn = ash(async function(req, res) {
 exports.signOut = ash(async function(req, res) {
   var user = await db.User.findOne({
     where: {
-      token: {
-        [Op.substring]: req.session.id
-      }
+      token: req.session.id
     }
   });
 
@@ -171,22 +169,20 @@ exports.signOut = ash(async function(req, res) {
     });
   }
 
-  const token = JSON.parse(user.dataValues.token);
-  delete token[req.session.id];
-  req.session.destroy(function(err) {
-    console.log(err);
-  });
-
-  user.token = JSON.stringify(token);
+  req.session = null;
+  user.token = '{}';
   user = await user.save();
+  user = {};
 
-  if (user.length === 0) {
+  if (Object.keys(user).length === 0) {
     return res.status(500).send({
       error: 'An error occurred while signing out user.'
     });
   }
 
-  res.status(200).send({
-    message: 'User signed out successfully!'
-  });
+  res.header('authorization', '')
+    .status(200)
+    .send({
+      message: 'User signed out successfully!'
+    });
 });
