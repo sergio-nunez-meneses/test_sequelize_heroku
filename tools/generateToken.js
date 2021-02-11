@@ -15,15 +15,18 @@ const algo = {
   ES512: 'RSA-SHA512'
 };
 
-console.log('generated jwt:');
-console.log(generateJwt(
+const jwt = generateJwt(
   algo['RS256'],
   {
     userId: dummyData['id'],
     userRole: dummyData['role']
   },
   15
-));
+);
+const validJwt = verifyJwt(jwt);
+
+console.log('generated jwt:', jwt);
+console.log('valid token?', typeof validJwt === 'object' ? validJwt['valid'] : validJwt);
 
 function generateJwt(algo, userData, exp) {
   const header = createHeader(algo);
@@ -51,14 +54,15 @@ function createHeader(algo) {
 }
 
 function createPayload(data, exp) {
-  var setExp = new Date(Date.now());
-  setExp.setMinutes(setExp.getMinutes() + exp);
+  var iat = Date.now();
+  var setExp = iat + (exp * 60 * 1000);
 
   var claims = {
+    iat: iat,
     exp: setExp,
     iss: dummyData['iss']
   }
-  var payload = Object.assign(data, claims);
+  var payload = Object.assign({ data: data }, claims);
 
   return payload;
 }
@@ -68,6 +72,72 @@ function createSignature(algo, privateKey, data) {
     .createSign(algo)
     .update(data)
     .sign(privateKey);
+}
+
+function verifyJwt(jwt) {
+  if (!jwt.includes('.')) {
+    return "Token doesn't contain expected delimiter.";
+  }
+
+  if (jwt.split('.').length != 3) {
+    return "Token doesn't contain expected structure.";
+  }
+
+  const [encodedHeader, encodedPayload, encodedSignature] = jwt.split('.');
+  const header = decodeTokenStructure(encodedHeader);
+  const payload = decodeTokenStructure(encodedPayload);
+  const validHeader = verifyHeader(header);
+
+  if (typeof validHeader !== 'boolean' && validHeader === true) {
+    return validHeader;
+  }
+
+  const publicKey = getPublicKey();
+  const signature = decodeSignature(encodedSignature);
+  const signInput = [encodedHeader, encodedPayload].join('.');
+  const validSignature = verifySignature(header['alg'], publicKey, signature, signInput);
+
+  if (!validSignature) {
+    return 'Invalid token signature.';
+  }
+
+  const validPayload = verifyPayload(payload);
+
+  if (typeof validPayload !== 'boolean' && validPayload === true) {
+    return validPayload;
+  }
+
+  return Object.assign({ valid: true }, payload['data']);
+}
+
+function verifyHeader(header) {
+  const values = Object.values(algo);
+
+  if (header['typ'] !== 'JWT') {
+    return 'Invalid or unsupported token type.';
+  }
+
+  if (!values.includes(header['alg'])) {
+    return 'Invalid or unsupported sign algorithm.';
+  }
+
+  return true;
+}
+
+function verifyPayload(payload) {
+  if (payload['iss'] !== dummyData['iss']) {
+    return 'Invalid token issuer.';
+  }
+
+  if (payload['exp'] < Date.now()) {
+    return 'Token expired. Please, sign in again.';
+  }
+
+  if (payload['iat'] > Date.now()) {
+    return 'Token was issued in the future.';
+  }
+
+  return true;
 }
 
 function verifySignature(algo, publicKey, signature, data) {
@@ -85,12 +155,16 @@ function getPublicKey() {
   return fs.readFileSync('../keys/public.key', 'utf8');
 }
 
+function decodeSignature(signature) {
+  return Buffer.from(base64UrlDecode(signature), 'base64');
+}
+
 function encodeTokenStructure(tokenPart) {
   return base64UrlEncode(JSON.stringify(tokenPart));
 }
 
 function decodeTokenStructure(encodedTokenPart) {
-  return JSON.parse(Buffer.from(base64UrlDecode(encodedTokenPart),'base64'));
+  return JSON.parse(Buffer.from(base64UrlDecode(encodedTokenPart), 'base64'));
 };
 
 function base64UrlEncode(str) {
