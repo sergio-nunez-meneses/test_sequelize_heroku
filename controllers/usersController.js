@@ -103,8 +103,6 @@ exports.deleteOne = ash(async function(req, res) {
 });
 
 exports.signIn = ash(async function(req, res) {
-  console.log(req.body); // debug
-
   const requestKeys = Object.keys(req.body);
 
   if (requestKeys.length === 0) {
@@ -140,21 +138,16 @@ exports.signIn = ash(async function(req, res) {
     });
   }
 
-  const generatedJwt = user.generateJwt(req.session.id);
+  const generatedJwt = await user.generateJwt(req.session.id);
 
-  // const token = {};
-  // var date = new Date(Date.now());
-  // date.setHours(date.getHours() + 1);
-  // token[req.session.id] = date;
-  //
-  // user.token = JSON.stringify(token);
-  // user = await user.save();
-  //
-  // if (user.length === 0) {
-  //   return res.status(500).send({
-  //     error: 'An error occurred while signing in user.'
-  //   });
-  // }
+  if (typeof generatedJwt === 'object') {
+    return res.status(500).send({
+      error: generatedJwt['message']
+    });
+  }
+
+  user['token'] = req.session.id;
+  user = await user.save();
 
   res.header('authorization', 'Bearer ' + generatedJwt)
     .status(200)

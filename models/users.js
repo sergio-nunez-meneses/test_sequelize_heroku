@@ -18,19 +18,23 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    generateJwt(jti) {
-      const token = jwt.sign({
-        jti: jti,
-        id: this.id,
-        role: this.role
-      },
-      privateKey,
-      {
-        algorithm: 'RS256',
-        expiresIn: 60000
-      });
+    async generateJwt(jti) {
+      try {
+        const token = await jwt.sign({
+          jti: jti,
+          id: this.id,
+          role: this.role
+        },
+        privateKey,
+        {
+          algorithm: 'RS256',
+          expiresIn: 60000
+        });
 
-      return token;
+        return token;
+      } catch (err) {
+        return err;
+      }
     }
   };
   User.init({
