@@ -74,31 +74,7 @@ models.sequelize.sync({ force: true })
       '47.001512, 3.134294'
     ];
 
-    const userNames = farmerNames;
-    const userEmails = farmerEmails;
-    const userPasswords = [
-      '$2b$10$wWlZpll00BFpm67GUiynauby6ku1sW5Wf2./M2Ekf9g9qKIJ.NxJK',
-      '$2b$10$yNfzEtPCJLCHcswP8gZXqeYKHfnVNGYfTXfRjFe3hd84JQHJfi70m',
-      '$2b$10$QdDpftvAIxN0N65qWG72KOiWL7vwoamUfmOIc9NrQGtq60YsLBb0q',
-      '$2b$10$xVGA/psQGyMC88t8k1meveZZM6U2IgcwO9DKRFI26tZafSUGy7T7K'
-    ];
-
-    const userRoles = [
-      'Admin',
-      'User',
-      'User',
-      'User',
-    ];
-
     for (var i = 0; i < farmerNames.length; i++) {
-      var user = await models.User.create({
-        name: userNames[i],
-        email: userEmails[i],
-        password: userPasswords[i],
-        role: userRoles[i],
-        token: '{}'
-      });
-
       var farmer = await models.Farmer.create({
         name: farmerNames[i],
         email: farmerEmails[i],
