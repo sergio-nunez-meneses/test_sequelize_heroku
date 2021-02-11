@@ -46,7 +46,7 @@ const signInSchema = Joi.object({
     .min(6)
     .max(20)
     .required()
-})
+});
 
 exports.create = ash(async function(req, res) {
   const keys = await mainController.checkEmptyFields(req, res);
@@ -140,19 +140,22 @@ exports.signIn = ash(async function(req, res) {
     });
   }
 
-  const token = {};
-  var date = new Date(Date.now());
-  date.setHours(date.getHours() + 1);
-  token[req.session.id] = date;
+  const generatedJwt = user.generateJwt(req.session.id);
+  console.log('generated token', generatedJwt);
 
-  user.token = JSON.stringify(token);
-  user = await user.save();
-
-  if (user.length === 0) {
-    return res.status(500).send({
-      error: 'An error occurred while signing in user.'
-    });
-  }
+  // const token = {};
+  // var date = new Date(Date.now());
+  // date.setHours(date.getHours() + 1);
+  // token[req.session.id] = date;
+  //
+  // user.token = JSON.stringify(token);
+  // user = await user.save();
+  //
+  // if (user.length === 0) {
+  //   return res.status(500).send({
+  //     error: 'An error occurred while signing in user.'
+  //   });
+  // }
 
   res.status(200).send({
     message: 'User signed in successfully!'
@@ -176,6 +179,9 @@ exports.signOut = ash(async function(req, res) {
 
   const token = JSON.parse(user.dataValues.token);
   delete token[req.session.id];
+  req.session.destroy(function(err) {
+    console.log(err);
+  });
 
   user.token = JSON.stringify(token);
   user = await user.save();

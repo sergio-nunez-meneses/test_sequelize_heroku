@@ -155,10 +155,6 @@ function getPublicKey() {
   return fs.readFileSync('../keys/public.key', 'utf8');
 }
 
-function decodeSignature(signature) {
-  return Buffer.from(base64UrlDecode(signature), 'base64');
-}
-
 function encodeTokenStructure(tokenPart) {
   return base64UrlEncode(JSON.stringify(tokenPart));
 }
@@ -166,6 +162,10 @@ function encodeTokenStructure(tokenPart) {
 function decodeTokenStructure(encodedTokenPart) {
   return JSON.parse(Buffer.from(base64UrlDecode(encodedTokenPart), 'base64'));
 };
+
+function decodeSignature(signature) {
+  return Buffer.from(base64UrlDecode(signature), 'base64');
+}
 
 function base64UrlEncode(str) {
   return Buffer.from(str)

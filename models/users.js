@@ -1,4 +1,9 @@
 'use strict';
+
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const privateKey = fs.readFileSync('./keys/private.key', 'utf8');
+
 const {
   Model
 } = require('sequelize');
@@ -11,6 +16,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+    }
+
+    generateJwt(jti) {
+      const token = jwt.sign({
+        jti: jti,
+        id: this.id,
+        role: this.role
+      },
+      privateKey,
+      {
+        algorithm: 'RS256',
+        expiresIn: 60000
+      });
+
+      return token;
     }
   };
   User.init({
