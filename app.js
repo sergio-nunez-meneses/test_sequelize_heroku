@@ -50,6 +50,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/index'));
+app.use('/api/auth', require('./auth/authRoutes'));
 app.use('/api/users', require('./routes/usersRoutes'));
 app.use('/api/farmers', require('./routes/farmersRoutes'));
 app.use('/api/farms', require('./routes/farmsRoutes'));
