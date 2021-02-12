@@ -29,6 +29,7 @@ exports.auth = ash(async function(req, res, next) {
       });
     }
 
+    req.user = decoded;
     next();
   });
 });

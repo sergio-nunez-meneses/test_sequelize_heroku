@@ -126,7 +126,7 @@ exports.signIn = ash(async function(req, res) {
 
   if (user === null) {
     return res.status(500).send({
-      error: `User with email=${userEmail} doesn't exist.`
+      error: `User with email=${req.body.email} doesn't exist.`
     });
   }
 
