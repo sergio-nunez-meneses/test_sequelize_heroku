@@ -52,8 +52,8 @@ exports.delete = ash(async function() {
   });
 });
 
-exports.getUserRole = ash(async function(model, id, jti) {
-  return await model.findOne({
+exports.getUserRole = ash(async function(id, jti) {
+  return await db.User.findOne({
     attributes: ['role'],
     where: {
       id: id,

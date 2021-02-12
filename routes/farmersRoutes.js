@@ -1,12 +1,13 @@
 const router = require('express').Router();
 const farmersController = require('../controllers/farmersController');
+const middleware = require('../middlewares/auth');
 
 // crud
-router.post('/', farmersController.create);
-router.get('/', farmersController.findAll);
-router.get('/:id', farmersController.findOne);
-router.put('/:id', farmersController.update);
-router.delete('/', farmersController.deleteAll);
-router.delete('/:id', farmersController.deleteOne);
+router.post('/', middleware.auth, farmersController.create);
+router.get('/', middleware.auth, farmersController.findAll);
+router.get('/:id', middleware.auth, farmersController.findOne);
+router.put('/:id', middleware.auth, farmersController.update);
+router.delete('/', middleware.auth, farmersController.deleteAll);
+router.delete('/:id', middleware.auth, farmersController.deleteOne);
 
 module.exports = router;

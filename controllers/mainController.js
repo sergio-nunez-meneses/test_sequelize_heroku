@@ -55,10 +55,10 @@ exports.checkEmptyValues = async function(req, res, keys) {
 
 exports.checkUserRole = ash(async function(req, model, validRoles) {
   var response = [];
-  const user = await mainRepository.getUserRole(model[0], req.user.id, req.user.jti);
+  const user = await mainRepository.getUserRole(req.user.id, req.user.jti);
 
   if (user === null) {
-    response.push(false, `Error retrieving user with id=${req.user.id}. Maybe user was not found.`);
+    response.push(false, 'You need sign in to access this resource.');
 
     return response;
   }
@@ -69,10 +69,24 @@ exports.checkUserRole = ash(async function(req, model, validRoles) {
     return response;
   }
 
+  if (req.user.role === 'User' && model[1] === 'users') {
+    response.push(false, "You don't have permission to access this resource.");
+
+    return response;
+  }
+
   return true;
 });
 
 exports.createInstance = async function(req, res, schema, model) {
+  const userAllowed = await module.exports.checkUserRole(req, model, 'Admin');
+
+  if (typeof userAllowed !== 'boolean' && !userAllowed[0]) {
+    return res.status(500).send({
+      error: userAllowed[1]
+    });
+  }
+
   const formValidation = await schema.validate(req.body);
 
   if (formValidation.error) {
@@ -135,6 +149,14 @@ exports.findAllInstances = async function(req, res, model) {
 };
 
 exports.findOneInstance = async function(req, res, model) {
+  const userAllowed = await module.exports.checkUserRole(req, model, ['Admin', 'User']);
+
+  if (typeof userAllowed !== 'boolean' && !userAllowed[0]) {
+    return res.status(500).send({
+      error: userAllowed[1]
+    });
+  }
+
   const id = { id: req.params.id };
   const instance = await mainRepository.find(model[0], id);
   const instanceName = model[1].substring(0, model[1].length - 1);
@@ -149,6 +171,14 @@ exports.findOneInstance = async function(req, res, model) {
 };
 
 exports.updateInstance = async function(req, res, model) {
+  const userAllowed = await module.exports.checkUserRole(req, model, 'Admin');
+
+  if (typeof userAllowed !== 'boolean' && !userAllowed[0]) {
+    return res.status(500).send({
+      error: userAllowed[1]
+    });
+  }
+
   const id = { id: req.params.id };
   const instance = await mainRepository.updateOne(model[0], req.body, id);
   const instanceName = model[1].substring(0, model[1].length - 1);
@@ -171,6 +201,14 @@ exports.updateInstance = async function(req, res, model) {
 };
 
 exports.deleteAllInstances = async function(req, res, model) {
+  const userAllowed = await module.exports.checkUserRole(req, model, 'Admin');
+
+  if (typeof userAllowed !== 'boolean' && !userAllowed[0]) {
+    return res.status(500).send({
+      error: userAllowed[1]
+    });
+  }
+
   const instances = await mainRepository.delete(model[0]);
 
   if (instances === 0) {
@@ -185,6 +223,14 @@ exports.deleteAllInstances = async function(req, res, model) {
 };
 
 exports.deleteOneInstance = async function(req, res, model) {
+  const userAllowed = await module.exports.checkUserRole(req, model, 'Admin');
+
+  if (typeof userAllowed !== 'boolean' && !userAllowed[0]) {
+    return res.status(500).send({
+      error: userAllowed[1]
+    });
+  }
+
   const id = { id: req.params.id };
   const instance = await mainRepository.delete(model[0], id);
   const instanceName = model[1].substring(0, model[1].length - 1);
