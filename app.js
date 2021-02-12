@@ -14,7 +14,7 @@ app.use(session({
   saveUninitialized: true,
   resave: true,
   cookie: {
-    maxAge: 60000,
+    maxAge: 240000,
     secure: false
   }
 }));
@@ -47,7 +47,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/index'));
 app.use('/api/auth', require('./auth/authRoutes'));
