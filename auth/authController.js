@@ -72,3 +72,33 @@ exports.login = ash(async function(req, res) {
       message: 'User signed in successfully!'
     });
 });
+
+exports.logout = ash(async function(req, res) {
+  var user = await db.User.findOne({
+    where: {
+      token: req.session.id
+    }
+  });
+
+  if (user === null) {
+    return res.status(500).send({
+      error: `Cannot sign out user with token=${req.session.id}. Maybe user was not found.`
+    });
+  }
+
+  req.session = null;
+  user.token = '{}';
+  user = await user.save();
+
+  if (Object.keys(user).length === 0) {
+    return res.status(500).send({
+      error: 'An error occurred while signing out user.'
+    });
+  }
+
+  res.header('authorization', '')
+    .status(200)
+    .send({
+      message: 'User signed out successfully!'
+    });
+});
