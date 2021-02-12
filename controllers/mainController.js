@@ -53,6 +53,25 @@ exports.checkEmptyValues = async function(req, res, keys) {
   return true;
 };
 
+exports.checkUserRole = ash(async function(req, model, validRoles) {
+  var response = [];
+  const user = await mainRepository.getUserRole(model[0], req.user.id, req.user.jti);
+
+  if (user === null) {
+    response.push(false, `Error retrieving user with id=${req.user.id}. Maybe user was not found.`);
+
+    return response;
+  }
+
+  if (user.role !== req.user.role || !validRoles.includes(req.user.role)) {
+    response.push(false, "You don't have permission to access this resource.");
+
+    return response;
+  }
+
+  return true;
+});
+
 exports.createInstance = async function(req, res, schema, model) {
   const formValidation = await schema.validate(req.body);
 
@@ -86,6 +105,14 @@ exports.createInstance = async function(req, res, schema, model) {
 };
 
 exports.findAllInstances = async function(req, res, model) {
+  const userAllowed = await module.exports.checkUserRole(req, model, ['Admin', 'User']);
+
+  if (typeof userAllowed !== 'boolean' && !userAllowed[0]) {
+    return res.status(500).send({
+      error: userAllowed[1]
+    });
+  }
+
   var keys;
 
   if (Object.keys(req.query).length > 0) {

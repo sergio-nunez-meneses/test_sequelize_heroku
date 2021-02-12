@@ -103,8 +103,6 @@ exports.deleteOne = ash(async function(req, res) {
 });
 
 exports.signIn = ash(async function(req, res) {
-  console.log(req.body); // debug
-
   const requestKeys = Object.keys(req.body);
 
   if (requestKeys.length === 0) {
@@ -128,7 +126,7 @@ exports.signIn = ash(async function(req, res) {
 
   if (user === null) {
     return res.status(500).send({
-      error: `User with email=${userEmail} doesn't exist.`
+      error: `User with email=${req.body.email} doesn't exist.`
     });
   }
 
@@ -140,21 +138,16 @@ exports.signIn = ash(async function(req, res) {
     });
   }
 
-  const generatedJwt = user.generateJwt(req.session.id);
+  const generatedJwt = await user.generateJwt(req.session.id);
 
-  // const token = {};
-  // var date = new Date(Date.now());
-  // date.setHours(date.getHours() + 1);
-  // token[req.session.id] = date;
-  //
-  // user.token = JSON.stringify(token);
-  // user = await user.save();
-  //
-  // if (user.length === 0) {
-  //   return res.status(500).send({
-  //     error: 'An error occurred while signing in user.'
-  //   });
-  // }
+  if (typeof generatedJwt === 'object') {
+    return res.status(500).send({
+      error: generatedJwt['message']
+    });
+  }
+
+  user['token'] = req.session.id;
+  user = await user.save();
 
   res.header('authorization', 'Bearer ' + generatedJwt)
     .status(200)
@@ -166,9 +159,7 @@ exports.signIn = ash(async function(req, res) {
 exports.signOut = ash(async function(req, res) {
   var user = await db.User.findOne({
     where: {
-      token: {
-        [Op.substring]: req.session.id
-      }
+      token: req.session.id
     }
   });
 
@@ -178,22 +169,19 @@ exports.signOut = ash(async function(req, res) {
     });
   }
 
-  const token = JSON.parse(user.dataValues.token);
-  delete token[req.session.id];
-  req.session.destroy(function(err) {
-    console.log(err);
-  });
-
-  user.token = JSON.stringify(token);
+  req.session = null;
+  user.token = '{}';
   user = await user.save();
 
-  if (user.length === 0) {
+  if (Object.keys(user).length === 0) {
     return res.status(500).send({
       error: 'An error occurred while signing out user.'
     });
   }
 
-  res.status(200).send({
-    message: 'User signed out successfully!'
-  });
+  res.header('authorization', '')
+    .status(200)
+    .send({
+      message: 'User signed out successfully!'
+    });
 });
