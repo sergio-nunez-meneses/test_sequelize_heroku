@@ -86,7 +86,6 @@ exports.logout = ash(async function(req, res) {
     });
   }
 
-  req.session = null;
   user.token = '{}';
   user = await user.save();
 
@@ -95,6 +94,14 @@ exports.logout = ash(async function(req, res) {
       error: 'An error occurred while signing out user.'
     });
   }
+
+  await req.session.destroy(function(err) {
+    if (err) {
+      return res.status(500).send({
+        error: 'An error occurred while signing out user.'
+      });
+    }
+  });
 
   res.header('authorization', '')
     .status(200)
