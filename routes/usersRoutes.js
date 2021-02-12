@@ -3,8 +3,8 @@ const usersController = require('../controllers/usersController');
 const middleware = require('../middlewares/auth');
 
 // access
-router.put('/signin', usersController.signIn);
-router.get('/signout', usersController.signOut);
+// router.put('/signin', usersController.signIn);
+// router.get('/signout', usersController.signOut);
 
 // crud
 router.post('/', middleware.auth, usersController.create);
