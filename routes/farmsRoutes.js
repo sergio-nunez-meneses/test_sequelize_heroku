@@ -2,7 +2,6 @@ const router = require('express').Router();
 const farmsController = require('../controllers/farmsController');
 const middleware = require('../middlewares/auth');
 
-// crud
 router.post('/', middleware.auth, farmsController.create);
 router.get('/', middleware.auth, farmsController.findAll);
 router.get('/:id', middleware.auth, farmsController.findOne);

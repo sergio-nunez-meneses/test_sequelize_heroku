@@ -2,11 +2,6 @@ const router = require('express').Router();
 const usersController = require('../controllers/usersController');
 const middleware = require('../middlewares/auth');
 
-// access
-// router.put('/signin', usersController.signIn);
-// router.get('/signout', usersController.signOut);
-
-// crud
 router.post('/', middleware.auth, usersController.create);
 router.get('/', middleware.auth, usersController.findAll);
 router.get('/:id', middleware.auth, usersController.findOne);
