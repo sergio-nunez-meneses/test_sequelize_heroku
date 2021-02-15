@@ -7,6 +7,8 @@ const privateKey = fs.readFileSync(path.join(__dirname, '..', 'keys/private.key'
 exports.auth = ash(async function(req, res, next) {
   var generatedJwt = req.headers['x-access-token'] || req.headers['x-auth-token'] || req.headers['authorization'];
 
+  console.log('jwt:', generatedJwt); // just for debugging
+
   if (!generatedJwt || generatedJwt === undefined || generatedJwt === '') {
     return res.status(401).send({
       error: 'Access denied: no token provided.'
@@ -19,7 +21,7 @@ exports.auth = ash(async function(req, res, next) {
     });
   }
 
-  generatedJwt = generatedJwt.split('Bearer ')[1];
+  // generatedJwt = generatedJwt.split('Bearer ')[1];
 
   jwt.verify(generatedJwt, privateKey, {
     algorithms: ['RS256']
