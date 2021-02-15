@@ -28,6 +28,10 @@ export const auth = {
             return Promise.reject(error);
           }
         );
+    },
+    logout({ commit }) {
+      AuthService.logout();
+      commit('logout');
     }
   },
   mutations: {
@@ -36,6 +40,10 @@ export const auth = {
       state.user = user;
     },
     loginFailure(state) {
+      state.status.loggedIn = false;
+      state.user = null;
+    },
+    logout(state) {
       state.status.loggedIn = false;
       state.user = null;
     }

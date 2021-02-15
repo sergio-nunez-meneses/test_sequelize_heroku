@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/api/auth';
+axios.defaults.withCredentials = true;
 
 class AuthService {
   login(user) {
@@ -16,6 +17,18 @@ class AuthService {
 
         return response.data;
       });
+  }
+
+  logout() {
+    axios
+      .get(API_URL + '/logout')
+        .then(response => {
+          console.log(response);
+          localStorage.removeItem('user');
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
   }
 }
 

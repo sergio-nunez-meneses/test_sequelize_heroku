@@ -66,14 +66,11 @@ export default {
 </script>
 
 <style scoped>
-.form {
-  max-width: 750px;
-  margin: auto;
-}
-
 form {
   display: flex;
   flex-direction: column;
+  width: 75%;
+  margin: auto;
 }
 
 input, button {

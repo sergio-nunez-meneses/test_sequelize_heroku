@@ -47,7 +47,7 @@ export default {
 
 <style scoped>
 .list {
-  max-width: 750px;
+  width: 100%;
   margin: auto;
   text-align: center;
 }
