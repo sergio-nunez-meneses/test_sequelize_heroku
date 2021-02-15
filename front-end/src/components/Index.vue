@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <h1>Users List</h1>
-    <p> {{ error ? error.message : '' }} </p>
+    <p v-if="error"> {{ error }} </p>
     <ul>
       <li
         v-for="(user, index) in users"
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import UsersDataService from '../services/UsersDataService';
+import UsersService from '../services/UsersService';
 
 export default {
   name: 'users-list',
@@ -26,16 +26,16 @@ export default {
   },
   methods: {
     getUsers() {
-      UsersDataService.getAll()
+      UsersService.getAll()
         .then(response => {
-          console.log(response.data);
+          console.log(response);
 
           this.users = response.data;
         })
         .catch(e => {
-          console.log(e);
+          console.log(e.response);
 
-          this.error = e;
+          this.error = e.response.data.error;
         });
     }
   },
@@ -47,8 +47,8 @@ export default {
 
 <style scoped>
 .list {
-  text-align: center;
   max-width: 750px;
   margin: auto;
+  text-align: center;
 }
 </style>

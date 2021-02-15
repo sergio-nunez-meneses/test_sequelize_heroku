@@ -66,11 +66,19 @@ exports.login = ash(async function(req, res) {
   user['token'] = req.session.id;
   user = await user.save();
 
-  res.header('authorization', 'Bearer ' + generatedJwt)
-    .status(200)
-    .send({
-      message: 'User signed in successfully!'
-    });
+  // res.header('authorization', 'Bearer ' + generatedJwt)
+  //   .status(200)
+  //   .send({
+  //     message: 'User signed in successfully!'
+  //   });
+
+  res.status(200).send({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    roles: user.role,
+    accessToken: generatedJwt
+  });
 });
 
 exports.logout = ash(async function(req, res) {

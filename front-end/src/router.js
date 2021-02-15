@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Index from './components/Index';
 
 Vue.use(Router);
 
@@ -9,7 +10,17 @@ export default new Router({
     {
       path: '/',
       name: 'index',
-      component: () => import('./components/Index')
+      component: Index
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('./components/Login')
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('./components/Profile')
     }
   ]
 });
