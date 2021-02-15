@@ -1,28 +1,66 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <header class="nav-bar">
+      <ul>
+        <li>
+          <router-link to="/users">
+            Users List
+          </router-link>
+        </li>
+        <li v-if="!currentUser">
+          <router-link to="/">
+            Login
+          </router-link>
+        </li>
+        <li v-if="currentUser">
+          <router-link to="/profile">
+            {{ currentUser.name }}
+          </router-link>
+        </li>
+        <li v-if="currentUser">
+          <a href @click.prevent="logout">
+            Logout
+          </a>
+        </li>
+      </ul>
+    </header>
+
+    <router-view/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    }
   }
-}
+};
 </script>
 
-<style>
+<style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  max-width: 750px;
+  margin: auto;
+}
+
+ul {
+  display: flex;
+  justify-content: space-around;
+}
+
+li {
+  list-style-type: none;
+  text-decoration: none;
 }
 </style>

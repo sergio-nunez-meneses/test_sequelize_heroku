@@ -7,6 +7,14 @@ const logger = require('morgan');
 
 var app = express();
 
+const cors = require('cors');
+var corsOptions = {
+  origin: 'http://localhost:3001',
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+
 // sessions
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({

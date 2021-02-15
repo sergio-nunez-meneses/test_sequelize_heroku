@@ -57,23 +57,36 @@ exports.login = ash(async function(req, res) {
 
   const generatedJwt = await user.generateJwt(req.session.id);
 
+  console.log('logged in:', req.session.id); // just for debugging
+
   if (typeof generatedJwt === 'object') {
     return res.status(500).send({
       error: generatedJwt['message']
     });
   }
 
-  user['token'] = req.session.id;
+  user.token = req.session.id;
   user = await user.save();
 
-  res.header('authorization', 'Bearer ' + generatedJwt)
-    .status(200)
-    .send({
-      message: 'User signed in successfully!'
-    });
+  // res.header('authorization', 'Bearer ' + generatedJwt);
+  //   .status(200)
+  //   .send({
+  //     message: 'User signed in successfully!'
+  //   });
+
+  res.header('x-access-token', generatedJwt);
+  res.status(200).send({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    roles: user.role,
+    accessToken: generatedJwt
+  });
 });
 
 exports.logout = ash(async function(req, res) {
+  console.log('logout:', req.session.id); // just for debugging
+
   var user = await db.User.findOne({
     where: {
       token: req.session.id
@@ -103,9 +116,13 @@ exports.logout = ash(async function(req, res) {
     }
   });
 
-  res.header('authorization', '')
-    .status(200)
-    .send({
-      message: 'User signed out successfully!'
-    });
+  // res.header('x-access-token', '')
+  //   .status(200)
+  //   .send({
+  //     message: 'User signed out successfully!'
+  //   });
+
+  res.status(200).send({
+    message: 'User signed out successfully!'
+  });
 });
