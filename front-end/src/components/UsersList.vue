@@ -1,13 +1,13 @@
 <template>
-  <div class="container-fluid m-auto border">
+  <div class="container-fluid m-auto">
     <div class="row">
       <div class="col-md-12">
-        <h1 class="p-3 text-center">Current Users</h1>
+        <h3 class="p-3 text-center">Current Users</h3>
       </div>
     </div>
-    <div class="row">
+    <div v-if="!error" class="row">
       <div class="col-md-4">
-        <div v-if="!error" class="my-auto p-3">
+        <div class="my-auto p-3">
           <ul class="list-group">
             <li class="list-group-item"
               :class="{ active: index == currentIndex }"
@@ -18,9 +18,6 @@
               {{ user.name }}
             </li>
           </ul>
-        </div>
-        <div v-else class="alert alert-danger">
-          <p> {{ error }} </p>
         </div>
       </div>
       <div class="col-md-8 m-auto">
@@ -45,6 +42,13 @@
         </div>
         <div v-else class="p-3">
           <p class="text-center">Click on an user to edit it...</p>
+        </div>
+      </div>
+    </div>
+    <div v-else >
+      <div class="col-md-12">
+        <div class="alert p-3 alert-danger text-center">
+          <p> {{ error }} </p>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <header>
-      <ul>
+  <div id="app" class="container-fluid">
+    <div class="row border">
+      <ul class="d-inline-flex justify-content-around w-100 pt-3 list-unstyled">
         <li>
           <router-link to="/users">
             Users List
@@ -23,9 +23,11 @@
           </a>
         </li>
       </ul>
-    </header>
+    </div>
 
-    <router-view/>
+    <div class="router-container container border my-3 p-5">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -47,20 +49,11 @@ export default {
 </script>
 
 <style scoped>
-#app {
-  display: flex;
-  flex-direction: column;
-  max-width: 750px;
-  margin: auto;
+.router-container {
+  max-width: 768px;
 }
 
-ul {
-  display: flex;
-  justify-content: space-around;
-}
-
-li {
-  list-style-type: none;
+a {
   text-decoration: none;
 }
 </style>

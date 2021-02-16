@@ -9,9 +9,7 @@
           <div class="my-auto p-3 text-center">
             <ul class="list-group">
               <li class="list-group-item">
-                {{ currentUser.accessToken.substring(0, 20) }}
-                ...
-                {{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
+                {{ currentUser.accessToken.substring(0, 20) }}...{{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
               </li>
               <li class="list-group-item"> {{ currentUser.id }} </li>
               <li class="list-group-item"> {{ currentUser.email }} </li>
