@@ -18,6 +18,12 @@
               {{ farmer.name }}
             </li>
           </ul>
+
+          <button class="btn w-100 my-1 btn-danger"
+            @click="deleteFarmers"
+          >
+            Delete All
+          </button>
         </div>
       </div>
       <div class="col-md-8 m-auto">
@@ -56,7 +62,8 @@
 </template>
 
 <script>
-import FarmersService from '../services/FarmersService';
+// import FarmersService from '../services/FarmersService';
+import MainService from '../services/MainService';
 
 export default {
   name: 'elements-list',
@@ -70,7 +77,7 @@ export default {
   },
   methods: {
     getFarmers() {
-      FarmersService.getAll()
+      MainService.getAll('farmers')
         .then(response => {
           console.log(response);
 
@@ -82,10 +89,25 @@ export default {
           this.error = e.response.data.error;
         });
     },
+
     setActiveFarmer(farmer, index) {
       this.currentFarmer = farmer;
       this.currentIndex = index;
-    }
+    },
+
+    deleteFarmers() {
+      MainService.deleteAll('farmers')
+        .then(response => {
+          console.log(response);
+
+          this.farmers = response.data;
+        })
+        .catch(e => {
+          console.log(e.response);
+
+          this.error = e.response.data.error;
+        });
+    },
   },
   mounted() {
     this.getFarmers();
