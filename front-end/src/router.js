@@ -21,7 +21,7 @@ export default new Router({
     {
       path: '/users',
       name: 'users',
-      component: () => import('./components/Index')
+      component: () => import('./components/UsersList')
     }
   ]
 });

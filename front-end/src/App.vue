@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header class="nav-bar">
+    <header>
       <ul>
         <li>
           <router-link to="/users">

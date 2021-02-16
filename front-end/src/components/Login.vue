@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div>
     <form name="form" @submit.prevent="validateLogin">
       <input
         v-model="user.email"
@@ -13,7 +13,7 @@
         name="password"
         placeholder="password"
       />
-      <button class="btn btn-primary btn-block" :disabled="loading">
+      <button :disabled="loading">
         Login
       </button>
       <p class="error" v-if="message"> {{ message }} </p>
