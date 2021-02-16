@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <h3 class="p-3 text-center">Current Users</h3>
+        <h3 class="p-3 text-center">Current Farmers</h3>
       </div>
     </div>
     <div v-if="!error" class="row align-items-center">
@@ -11,37 +11,37 @@
           <ul class="list-group">
             <li class="list-group-item"
               :class="{ active: index == currentIndex }"
-              v-for="(user, index) in users"
+              v-for="(farmer, index) in farmers"
               :key="index"
-              @click="setActiveUser(user, index)"
+              @click="setActiveFarmer(farmer, index)"
             >
-              {{ user.name }}
+              {{ farmer.name }}
             </li>
           </ul>
         </div>
       </div>
       <div class="col-md-8 m-auto">
-        <div v-if="currentUser" class="p-3">
-          <h3 class="text-center">{{ currentUser.name }}</h3>
+        <div v-if="currentFarmer" class="p-3">
+          <h3 class="text-center">{{ currentFarmer.name }}</h3>
           <ul class="list-group">
             <li class="list-group-item">
-              <strong>Id:</strong> {{ currentUser.id }}
+              <strong>Id:</strong> {{ currentFarmer.id }}
             </li>
             <li class="list-group-item">
-              <strong>Email:</strong> {{ currentUser.email }}
+              <strong>Email:</strong> {{ currentFarmer.email }}
             </li>
             <li class="list-group-item">
-              <strong>Role:</strong> {{ currentUser.role }}
+              <strong>Phone:</strong> {{ currentFarmer.phone }}
             </li>
           </ul>
           <a class="btn w-100 my-1 bg-warning"
-            :href="'/users/' + currentUser.id"
+            :href="'/farmers/' + currentFarmer.id"
           >
             Edit
           </a>
         </div>
         <div v-else class="p-3">
-          <p class="text-center">Click on an user to edit it...</p>
+          <p class="text-center">Click on an farmer to edit it...</p>
         </div>
       </div>
     </div>
@@ -56,25 +56,25 @@
 </template>
 
 <script>
-import UsersService from '../services/UsersService';
+import FarmersService from '../services/FarmersService';
 
 export default {
-  name: 'users-list',
+  name: 'elements-list',
   data() {
     return {
-      users: [],
-      currentUser: null,
+      farmers: [],
+      currentFarmer: null,
       currentIndex: -1,
       error: ''
-    };
+    }
   },
   methods: {
-    getUsers() {
-      UsersService.getAll()
+    getFarmers() {
+      FarmersService.getAll()
         .then(response => {
           console.log(response);
 
-          this.users = response.data;
+          this.farmers = response.data;
         })
         .catch(e => {
           console.log(e.response);
@@ -82,13 +82,13 @@ export default {
           this.error = e.response.data.error;
         });
     },
-    setActiveUser(user, index) {
-      this.currentUser = user;
+    setActiveFarmer(farmer, index) {
+      this.currentFarmer = farmer;
       this.currentIndex = index;
     }
   },
   mounted() {
-    this.getUsers();
+    this.getFarmers();
     console.log('route path:', this.$route.path);
   }
 }

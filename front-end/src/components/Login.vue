@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       user: new User(),
-      loading: false,
       message: ''
     };
   },
@@ -58,8 +57,7 @@ export default {
     validateLogin() {
       if (this.user.email && this.user.password) {
         this.$store.dispatch('auth/login', this.user)
-          .then(
-            () => {
+          .then(() => {
               this.$router.push('/profile');
             },
             error => {
@@ -72,6 +70,9 @@ export default {
           );
       }
     }
+  },
+  mounted() {
+    console.log('route path:', this.$route.path);
   }
 };
 </script>
