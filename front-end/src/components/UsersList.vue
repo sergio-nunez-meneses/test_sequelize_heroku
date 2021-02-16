@@ -1,11 +1,11 @@
 <template>
-  <div class="container-fluid m-auto">
+  <div>
     <div class="row">
       <div class="col-md-12">
         <h3 class="p-3 text-center">Current Users</h3>
       </div>
     </div>
-    <div v-if="!error" class="row">
+    <div v-if="!error" class="row align-items-center">
       <div class="col-md-4">
         <div class="my-auto p-3">
           <ul class="list-group">
