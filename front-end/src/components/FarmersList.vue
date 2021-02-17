@@ -62,11 +62,10 @@
 </template>
 
 <script>
-// import FarmersService from '../services/FarmersService';
 import MainService from '../services/MainService';
 
 export default {
-  name: 'elements-list',
+  name: 'farmers-list',
   data() {
     return {
       farmers: [],

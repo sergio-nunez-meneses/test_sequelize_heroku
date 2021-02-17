@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import UsersService from '../services/UsersService';
+import MainService from '../services/MainService';
 
 export default {
   name: 'users-list',
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     getUsers() {
-      UsersService.getAll()
+      MainService.getAll('users')
         .then(response => {
           console.log(response);
 
