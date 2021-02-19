@@ -32,9 +32,15 @@
 
           <h3 class="text-center">{{ currentFarmer.name }}</h3>
           <ul class="list-group">
-            <li class="list-group-item">
+            <li class="list-group-item"
+              @click="showInput($event)"
+            >
               <strong>Id:</strong> {{ currentFarmer.id }}
             </li>
+            <input form="updateFarmer" type="text" class="form-control d-none"
+              v-model="currentFarmer.id"
+              @focusout="hideInput($event)"
+            />
             <li class="list-group-item"
               @click="showInput($event)"
             >
@@ -44,15 +50,16 @@
               v-model="currentFarmer.email"
               @focusout="hideInput($event)"
             />
-            <li class="list-group-item">
+            <li class="list-group-item"
+              @click="showInput($event)"
+            >
               <strong>Phone:</strong> {{ currentFarmer.phone }}
             </li>
+            <input form="updateFarmer" type="text" class="form-control d-none"
+              v-model="currentFarmer.phone"
+              @focusout="hideInput($event)"
+            />
           </ul>
-          <!-- <a class="btn w-100 my-1 bg-warning"
-            :href="'/farmers/' + currentFarmer.id"
-          >
-            Edit
-          </a> -->
           <button type="submit" class="btn w-100 my-1 btn-warning text-white"
             @click="updateFarmer"
           >
