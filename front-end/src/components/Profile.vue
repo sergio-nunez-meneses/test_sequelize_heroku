@@ -30,7 +30,7 @@
                 {{ currentUser.role }}
               </li>
             </ul>
-            <button ref="updateButton" class="btn d-none w-100 my-1 btn-warning">
+            <button ref="updateButton" class="btn d-none w-100 my-1 btn-warning text-white">
               Update
             </button>
           </div>

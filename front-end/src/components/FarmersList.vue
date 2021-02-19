@@ -28,30 +28,47 @@
       </div>
       <div class="col-md-8 m-auto">
         <div v-if="currentFarmer" class="p-3">
+          <form name="updateFarmer"></form>
+
           <h3 class="text-center">{{ currentFarmer.name }}</h3>
           <ul class="list-group">
             <li class="list-group-item">
               <strong>Id:</strong> {{ currentFarmer.id }}
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item"
+              @click="showInput($event)"
+            >
               <strong>Email:</strong> {{ currentFarmer.email }}
             </li>
+            <input form="updateFarmer" type="text" class="form-control d-none"
+              v-model="currentFarmer.email"
+              @focusout="hideInput($event)"
+            />
             <li class="list-group-item">
               <strong>Phone:</strong> {{ currentFarmer.phone }}
             </li>
           </ul>
-          <a class="btn w-100 my-1 bg-warning"
+          <!-- <a class="btn w-100 my-1 bg-warning"
             :href="'/farmers/' + currentFarmer.id"
           >
             Edit
-          </a>
+          </a> -->
+          <button type="submit" class="btn w-100 my-1 btn-warning text-white"
+            @click="updateFarmer"
+          >
+            Update
+          </button>
+          <div v-if="success"
+            class="alert p-3 alert-success text-center">
+            <p> {{ success }} </p>
+          </div>
         </div>
         <div v-else class="p-3">
           <p class="text-center">Click on an farmer to edit it...</p>
         </div>
       </div>
     </div>
-    <div v-else >
+    <div v-else>
       <div class="col-md-12">
         <div class="alert p-3 alert-danger text-center">
           <p> {{ error }} </p>
@@ -71,10 +88,38 @@ export default {
       farmers: [],
       currentFarmer: null,
       currentIndex: -1,
+      success: '',
       error: ''
     }
   },
   methods: {
+    setActiveFarmer(farmer, index) {
+      this.currentFarmer = farmer;
+      this.currentIndex = index;
+
+      console.log(this.currentFarmer);
+    },
+
+    showInput(event) {
+      var listElement = event.target;
+      var input = event.target.nextSibling;
+
+      if (input.classList.contains('d-none')) {
+        input.classList.remove('d-none');
+        listElement.classList.add('d-none');
+      }
+    },
+
+    hideInput(event) {
+      var input = event.target;
+      var listElement = event.target.previousSibling;
+
+      if (listElement.classList.contains('d-none')) {
+        listElement.classList.remove('d-none');
+        input.classList.add('d-none');
+      }
+    },
+
     getFarmers() {
       MainService.getAll('farmers')
         .then(response => {
@@ -89,9 +134,18 @@ export default {
         });
     },
 
-    setActiveFarmer(farmer, index) {
-      this.currentFarmer = farmer;
-      this.currentIndex = index;
+    updateFarmer() {
+      MainService.updateOne('farmers/' + this.currentFarmer.id, this.currentFarmer)
+        .then(response => {
+          console.log(response);
+
+          this.success = 'Farmer updated successfully!';
+        })
+        .catch(e => {
+          console.log(e.response);
+
+          this.error = e.response.data.error;
+        });
     },
 
     deleteFarmers() {
