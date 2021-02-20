@@ -29,18 +29,11 @@
       <div class="col-md-8 m-auto">
         <div v-if="currentFarmer" class="p-3">
           <form name="updateFarmer"></form>
-
           <h3 class="text-center">{{ currentFarmer.name }}</h3>
           <ul class="list-group">
-            <li class="list-group-item"
-              @click="showInput($event)"
-            >
+            <li class="list-group-item">
               <strong>Id:</strong> {{ currentFarmer.id }}
             </li>
-            <input form="updateFarmer" type="text" class="form-control d-none"
-              v-model="currentFarmer.id"
-              @focusout="hideInput($event)"
-            />
             <li class="list-group-item"
               @click="showInput($event)"
             >
@@ -100,13 +93,6 @@ export default {
     }
   },
   methods: {
-    setActiveFarmer(farmer, index) {
-      this.currentFarmer = farmer;
-      this.currentIndex = index;
-
-      console.log(this.currentFarmer);
-    },
-
     showInput(event) {
       var listElement = event.target;
       var input = event.target.nextSibling;
@@ -125,6 +111,13 @@ export default {
         listElement.classList.remove('d-none');
         input.classList.add('d-none');
       }
+    },
+
+    setActiveFarmer(farmer, index) {
+      this.currentFarmer = farmer;
+      this.currentIndex = index;
+
+      console.log(this.currentFarmer);
     },
 
     getFarmers() {
