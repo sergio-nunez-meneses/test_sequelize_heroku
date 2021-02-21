@@ -16,6 +16,10 @@ class MainService {
   deleteAll(instance) {
     return axios.delete(api_url + instance, headers);
   }
+
+  deleteOne(instance) {
+    return axios.delete(api_url + instance, headers);
+  }
 }
 
 export default new MainService();
