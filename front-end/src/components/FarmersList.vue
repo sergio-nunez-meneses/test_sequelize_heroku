@@ -35,22 +35,22 @@
               <strong>Id:</strong> {{ currentFarmer.id }}
             </li>
             <li class="list-group-item"
-              @click="showInput($event)"
+              @click="showHideInput('show', $event)"
             >
               <strong>Email:</strong> {{ currentFarmer.email }}
             </li>
             <input form="updateFarmer" type="text" class="form-control d-none"
               v-model="currentFarmer.email"
-              @focusout="hideInput($event)"
+              @focusout="showHideInput('hide', $event)"
             />
             <li class="list-group-item"
-              @click="showInput($event)"
+              @click="showHideInput('show', $event)"
             >
               <strong>Phone:</strong> {{ currentFarmer.phone }}
             </li>
             <input form="updateFarmer" type="text" class="form-control d-none"
               v-model="currentFarmer.phone"
-              @focusout="hideInput($event)"
+              @focusout="showHideInput('hide', $event)"
             />
           </ul>
           <button type="submit" class="btn w-100 my-1 btn-warning text-white"
@@ -58,8 +58,12 @@
           >
             Update
           </button>
-          <div v-if="success"
-            class="alert p-3 alert-success text-center">
+          <button class="btn w-100 my-1 btn-danger text-white"
+            @click="deleteFarmer"
+          >
+            Delete
+          </button>
+          <div v-if="success" class="alert p-3 alert-success text-center">
             <p> {{ success }} </p>
           </div>
         </div>
@@ -68,7 +72,14 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-else-if="success">
+      <div class="col-md-12">
+        <div class="alert p-3 alert-success text-center">
+          <p> {{ success }} </p>
+        </div>
+      </div>
+    </div>
+    <div v-else-if="error">
       <div class="col-md-12">
         <div class="alert p-3 alert-danger text-center">
           <p> {{ error }} </p>
@@ -93,23 +104,21 @@ export default {
     }
   },
   methods: {
-    showInput(event) {
-      var listElement = event.target;
-      var input = event.target.nextSibling;
+    showHideInput(action, event) {
+      if (action === 'show') {
+        var input = event.target.nextSibling;
 
-      if (input.classList.contains('d-none')) {
-        input.classList.remove('d-none');
-        listElement.classList.add('d-none');
-      }
-    },
+        if (input.classList.contains('d-none')) {
+          input.classList.remove('d-none');
+          event.target.classList.add('d-none');
+        }
+      } else if (action === 'hide') {
+        var listElement = event.target.previousSibling;
 
-    hideInput(event) {
-      var input = event.target;
-      var listElement = event.target.previousSibling;
-
-      if (listElement.classList.contains('d-none')) {
-        listElement.classList.remove('d-none');
-        input.classList.add('d-none');
+        if (listElement.classList.contains('d-none')) {
+          listElement.classList.remove('d-none');
+          event.target.classList.add('d-none');
+        }
       }
     },
 
@@ -135,11 +144,15 @@ export default {
     },
 
     updateFarmer() {
-      MainService.updateOne('farmers/' + this.currentFarmer.id, this.currentFarmer)
+      MainService.updateOne(`farmers/${this.currentFarmer.id}`, this.currentFarmer)
         .then(response => {
           console.log(response);
 
-          this.success = 'Farmer updated successfully!';
+          this.success = response.data.message;
+
+          setTimeout(() => {
+            this.success = '';
+          }, 2000);
         })
         .catch(e => {
           console.log(e.response);
@@ -153,7 +166,12 @@ export default {
         .then(response => {
           console.log(response);
 
-          this.farmers = response.data;
+          this.success = response.data.message;
+          this.farmers = [];
+
+          setTimeout(() => {
+            this.getFarmers();
+          }, 2000);
         })
         .catch(e => {
           console.log(e.response);
@@ -161,6 +179,25 @@ export default {
           this.error = e.response.data.error;
         });
     },
+
+    deleteFarmer() {
+      MainService.deleteOne(`farmers/${this.currentFarmer.id}`)
+        .then(response => {
+          console.log(response);
+
+          this.success = response.data.message;
+
+          setTimeout(() => {
+            this.getFarmers();
+            this.currentFarmer = null;
+          }, 2000);
+        })
+        .catch(e => {
+          console.log(e.response);
+
+          this.error = e.response.data.error;
+        });
+    }
   },
   mounted() {
     this.getFarmers();
