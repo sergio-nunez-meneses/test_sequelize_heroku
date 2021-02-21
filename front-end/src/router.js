@@ -27,6 +27,11 @@ export default new Router({
       path: '/farmers',
       name: 'farmers',
       component: () => import('./components/FarmersList')
+    },
+    {
+      path: '/farms',
+      name: 'farms',
+      component: () => import('./components/FarmsList')
     }
   ]
 });
