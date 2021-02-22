@@ -20,6 +20,10 @@ class MainService {
   deleteOne(instance) {
     return axios.delete(api_url + instance, headers);
   }
+
+  getBy(instance, query) {
+    return axios.get(api_url + instance + `?${query}`, headers);
+  }
 }
 
 export default new MainService();
