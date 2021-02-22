@@ -131,16 +131,12 @@ export default {
 
           var loggedUser = this.$store.state.auth.user;
 
-          for (var i = 0; i < response.data.length; i++) {
-            if (response.data[i].name == loggedUser.name) {
+          for (var [key, value] of Object.entries(response.data)) {
+            if (value.name === loggedUser.name) {
               continue;
             }
 
-            this.users.push(response.data[i]);
-          }
-
-          for (var [key, value] of Object.entries(response.data)) {
-            console.log(key, value);
+            this.users.push(response.data[key]);
           }
         })
         .catch(e => {
