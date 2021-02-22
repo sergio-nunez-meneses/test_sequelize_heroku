@@ -18,22 +18,22 @@
                 <strong>Id:</strong> {{ currentUser.id }}
               </li>
               <li class="list-group-item"
-                @click="showInput($event)"
+                @click="showHideInput('show', $event)"
               >
                 <strong>Email:</strong> {{ currentUser.email }}
               </li>
               <input form="updateUser" type="text" class="form-control d-none"
                 v-model="currentUser.email"
-                @focusout="hideInput($event)"
+                @focusout="showHideInput('hide', $event)"
               />
               <li class="list-group-item"
-                @click="showInput($event)"
+                @click="showHideInput('show', $event)"
               >
                 <strong>Role:</strong> {{ currentUser.role }}
               </li>
               <input form="updateUser" type="text" class="form-control d-none"
                 v-model="currentUser.role"
-                @focusout="hideInput($event)"
+                @focusout="showHideInput('hide', $event)"
               />
             </ul>
             <button type="submit" class="btn w-100 my-1 btn-warning text-white"
@@ -91,32 +91,34 @@ export default {
     }
   },
   methods: {
-    showInput(event) {
-      var listElement = event.target;
-      var input = event.target.nextSibling;
+    showHideInput(action, event) {
+      if (action === 'show') {
+        var input = event.target.nextSibling;
 
-      if (input.classList.contains('d-none')) {
-        input.classList.remove('d-none');
-        listElement.classList.add('d-none');
-      }
-    },
+        if (input.classList.contains('d-none')) {
+          input.classList.remove('d-none');
+          event.target.classList.add('d-none');
+        }
+      } else if (action === 'hide') {
+        var listElement = event.target.previousSibling;
 
-    hideInput(event) {
-      var input = event.target;
-      var listElement = event.target.previousSibling;
-
-      if (listElement.classList.contains('d-none')) {
-        listElement.classList.remove('d-none');
-        input.classList.add('d-none');
+        if (listElement.classList.contains('d-none')) {
+          listElement.classList.remove('d-none');
+          event.target.classList.add('d-none');
+        }
       }
     },
 
     updateUser() {
-      MainService.updateOne('users/' + this.currentUser.id, this.currentUser)
+      MainService.updateOne(`users/${this.currentUser.id}`, this.currentUser)
         .then(response => {
           console.log(response);
 
-          this.success = 'User updated successfully!';
+          this.success = response.data.message;
+
+          setTimeout(() => {
+            this.success = '';
+          }, 2000);
         })
         .catch(e => {
           console.log(e.response);
