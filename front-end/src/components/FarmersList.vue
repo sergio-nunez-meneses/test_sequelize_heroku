@@ -63,8 +63,11 @@
           >
             Delete
           </button>
-          <div v-if="success" class="alert p-3 alert-success text-center">
-            <p> {{ success }} </p>
+          <div v-if="successMsg" class="alert p-3 alert-success text-center">
+            <p> {{ successMsg }} </p>
+          </div>
+          <div v-if="errorMsg" class="alert p-3 alert-success text-center">
+            <p> {{ errorMsg }} </p>
           </div>
         </div>
         <div v-else class="p-3">
@@ -100,7 +103,9 @@ export default {
       currentFarmer: null,
       currentIndex: -1,
       success: '',
-      error: ''
+      successMsg: '',
+      error: '',
+      errorMsg: ''
     }
   },
   methods: {
@@ -148,16 +153,17 @@ export default {
         .then(response => {
           console.log(response);
 
-          this.success = response.data.message;
+          this.successMsg = response.data.message;
 
           setTimeout(() => {
-            this.success = '';
+            this.successMsg = '';
+            this.getFarmers();
           }, 2000);
         })
         .catch(e => {
           console.log(e.response);
 
-          this.error = e.response.data.error;
+          this.errorMsg = e.response.data.error;
         });
     },
 
@@ -167,11 +173,11 @@ export default {
           console.log(response);
 
           this.success = response.data.message;
-          this.farmers = [];
 
           setTimeout(() => {
+            this.farmers = [];
             this.getFarmers();
-          }, 2000);
+          }, 10);
         })
         .catch(e => {
           console.log(e.response);
@@ -185,17 +191,18 @@ export default {
         .then(response => {
           console.log(response);
 
-          this.success = response.data.message;
+          this.successMsg = response.data.message;
 
           setTimeout(() => {
-            this.getFarmers();
             this.currentFarmer = null;
+            this.successMsg = '';
+            this.getFarmers();
           }, 2000);
         })
         .catch(e => {
           console.log(e.response);
 
-          this.error = e.response.data.error;
+          this.errorMsg = e.response.data.error;
         });
     }
   },
