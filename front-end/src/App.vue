@@ -1,23 +1,35 @@
 <template>
   <div id="app" class="container-fluid">
     <div class="row border">
-      <ul class="d-inline-flex justify-content-around w-100 pt-3 list-unstyled">
+      <ul v-if="!currentUser" class="d-inline-flex justify-content-end w-100 pt-3 px-3 list-unstyled">
+        <li>
+          <router-link to="/">
+            Login
+          </router-link>
+        </li>
+      </ul>
+      <ul v-else class="d-inline-flex justify-content-around w-100 pt-3 list-unstyled">
+        <li>
+          <router-link to="/farmers">
+            Farmers List
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/farms">
+            Farms List
+          </router-link>
+        </li>
         <li>
           <router-link to="/users">
             Users List
           </router-link>
         </li>
-        <li v-if="!currentUser">
-          <router-link to="/">
-            Login
-          </router-link>
-        </li>
-        <li v-if="currentUser">
+        <li>
           <router-link to="/profile">
             {{ currentUser.name }}
           </router-link>
         </li>
-        <li v-if="currentUser">
+        <li>
           <a href @click.prevent="logout">
             Logout
           </a>
