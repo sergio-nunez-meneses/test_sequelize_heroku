@@ -79,7 +79,7 @@ exports.login = ash(async function(req, res) {
     id: user.id,
     name: user.name,
     email: user.email,
-    roles: user.role,
+    role: user.role,
     accessToken: generatedJwt
   });
 });
