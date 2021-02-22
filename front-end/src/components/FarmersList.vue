@@ -14,7 +14,7 @@
           />
           <div class="input-group-append">
             <button class="btn btn-outline-success" type="button"
-              @click="findBy"
+              @click="searchBy"
             >
               Search
             </button>
@@ -222,7 +222,7 @@ export default {
         });
     },
 
-    findBy() {
+    searchBy() {
       MainService.getBy('farmers', this.query)
         .then(response => {
           console.log(response.data);
