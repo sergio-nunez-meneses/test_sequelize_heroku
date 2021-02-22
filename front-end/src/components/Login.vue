@@ -25,8 +25,8 @@
           </button>
         </div>
       </form>
-      <div v-if="message" class="alert p-3 alert-danger text-center">
-        <p> {{ message }} </p>
+      <div v-if="error" class="alert p-3 alert-danger text-center">
+        <p> {{ error }} </p>
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       user: new User(),
-      message: ''
+      error: ''
     };
   },
   computed: {
@@ -59,15 +59,11 @@ export default {
         this.$store.dispatch('auth/login', this.user)
           .then(() => {
               this.$router.push('/profile');
-            },
-            error => {
-              this.loading = false;
-              this.message =
-                (error.response && error.response.data) ||
-                error.message ||
-                error.toString();
-            }
-          );
+            })
+          .catch(e => {
+            this.loading = false;
+            this.error = e.response.data.error;
+          });
       }
     }
   },
