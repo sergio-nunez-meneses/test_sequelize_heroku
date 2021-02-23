@@ -58,6 +58,11 @@
         <div class="alert p-3 alert-success text-center">
           <p> {{ success }} </p>
         </div>
+        <button class="btn d-none w-100 btn-primary text-white"
+          @click="newElement"
+        >
+          Create New
+        </button>
       </div>
     </div>
   </div>
@@ -104,7 +109,7 @@ export default {
         farmerForm.classList.add('d-none');
         farmForm.classList.remove('d-none');
         submitButton.classList.remove('d-none');
-      } else if (event.target.index === 0) {
+      } else if (event.target.index == 0) {
         farmerForm.classList.add('d-none');
         farmForm.classList.add('d-none');
         submitButton.classList.add('d-none');
@@ -147,14 +152,14 @@ export default {
     },
 
     newElement() {
-      this.submitted = false;
-      this.elementName = '';
-
       if (this.elementName === 'farmer') {
         this.farmer = {};
       } else if (this.elementName === 'farm') {
         this.farm = {};
       }
+
+      this.submitted = false;
+      this.elementName = '';
     }
   }
 }

@@ -25,8 +25,11 @@
           </button>
         </div>
       </form>
-      <div v-if="error" class="alert p-3 alert-danger text-center">
-        <p> {{ error }} </p>
+      <div v-if="success" class="alert p-3 alert-success text-center">
+        <p ref="success"> {{ success }} </p>
+      </div>
+      <div v-else-if="error" class="alert p-3 alert-danger text-center">
+        <p ref="error"> {{ error }} </p>
       </div>
     </div>
   </div>
@@ -40,6 +43,7 @@ export default {
   data() {
     return {
       user: new User(),
+      success: '',
       error: ''
     };
   },
@@ -57,11 +61,14 @@ export default {
     validateLogin() {
       if (this.user.email && this.user.password) {
         this.$store.dispatch('auth/login', this.user)
-          .then(() => {
-              this.$router.push('/profile');
-            })
+          .then((response) => {
+            console.log(response);
+
+            this.$router.push('/profile');
+          })
           .catch(e => {
-            this.loading = false;
+            console.log(e.response);
+
             this.error = e.response.data.error;
           });
       }
