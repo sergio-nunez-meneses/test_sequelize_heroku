@@ -33,7 +33,6 @@
               {{ farmer.name }}
             </li>
           </ul>
-
           <button class="btn w-100 my-1 btn-danger"
             @click="deleteFarmers"
           >

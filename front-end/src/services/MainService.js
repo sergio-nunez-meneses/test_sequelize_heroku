@@ -5,6 +5,10 @@ const api_url = 'http://localhost:3000/api/';
 const headers = { headers: authHeader() };
 
 class MainService {
+  create(instance, data) {
+    return axios.post(api_url + instance, data, headers);
+  }
+
   getAll(instance) {
     return axios.get(api_url + instance, headers);
   }

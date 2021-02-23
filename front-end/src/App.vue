@@ -10,6 +10,11 @@
       </ul>
       <ul v-else class="d-inline-flex justify-content-around w-100 pt-3 list-unstyled">
         <li>
+          <router-link to="/create">
+            Create
+          </router-link>
+        </li>
+        <li>
           <router-link to="/farmers">
             Farmers List
           </router-link>
