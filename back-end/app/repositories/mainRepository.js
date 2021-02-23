@@ -1,5 +1,6 @@
 const db = require('../models/index');
 const ash = require('express-async-handler');
+const bcrypt = require('bcrypt');
 
 exports.createOne = ash(async function() {
   if (arguments.length > 2 && arguments[2] === 'user') {

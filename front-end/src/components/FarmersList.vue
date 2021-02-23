@@ -6,6 +6,21 @@
       </div>
     </div>
     <div v-if="!error" class="row align-items-center">
+      <div class="col-md-12">
+        <div class="input-group my-auto p-3">
+          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo@bar.fr"
+            v-model="query"
+            @change="textCounter($event)"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-outline-success" type="button"
+              @click="searchBy"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="col-md-4">
         <div class="my-auto p-3">
           <ul class="list-group">
@@ -18,7 +33,6 @@
               {{ farmer.name }}
             </li>
           </ul>
-
           <button class="btn w-100 my-1 btn-danger"
             @click="deleteFarmers"
           >
@@ -102,6 +116,7 @@ export default {
       farmers: [],
       currentFarmer: null,
       currentIndex: -1,
+      query: '',
       success: '',
       successMsg: '',
       error: '',
@@ -204,6 +219,26 @@ export default {
 
           this.errorMsg = e.response.data.error;
         });
+    },
+
+    searchBy() {
+      MainService.getBy('farmers', this.query)
+        .then(response => {
+          console.log(response.data);
+
+          this.farmers = response.data;
+        })
+        .catch(e => {
+          console.log(e.response);
+
+          this.error = e.response.data.error;
+        });
+    },
+
+    textCounter(event) {
+      if (event.target.textLength == 0) {
+        this.getFarmers();
+      }
     }
   },
   mounted() {
