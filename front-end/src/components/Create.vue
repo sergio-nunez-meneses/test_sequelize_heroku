@@ -73,10 +73,10 @@
                 v-model="user.password"
               />
               <div class="input-group-append">
-                <i class="fas fa-lock input-group-text"
+                <i class="input-group-text fas fa-lock"
                   @click="passwordGenerator($event)"
                 >
-                </i>
+              </i>
               </div>
             </div>
             <div class="form-group">
@@ -214,8 +214,6 @@ export default {
 
       console.log(generatedPassword);
 
-      input.innerText = generatedPassword;
-      input.textContent = generatedPassword;
       input.value = generatedPassword;
       this.user.password = generatedPassword;
     },
@@ -254,7 +252,5 @@ export default {
 </script>
 
 <style scoped>
-input {
-  margin: 1rem 0;
-}
+/*  */
 </style>

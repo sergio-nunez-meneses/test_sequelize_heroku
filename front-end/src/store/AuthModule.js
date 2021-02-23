@@ -20,11 +20,11 @@ export const auth = {
       return AuthService.login(user)
         .then(user => {
             commit('loginSuccess', user);
-            return user;
+            return Promise.resolve(user);
           })
         .catch(error => {
             commit('loginFailure');
-            return error;
+            return Promise.reject(error);
           })
     },
 
