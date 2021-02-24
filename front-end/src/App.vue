@@ -70,7 +70,7 @@ export default {
   max-width: 768px;
 }
 
-a {
+router-link, a {
   text-decoration: none;
 }
 </style>

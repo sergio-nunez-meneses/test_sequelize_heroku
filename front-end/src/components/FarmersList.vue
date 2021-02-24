@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-1 p-1">
         <h3 class="px-5 text-center">Current Farmers</h3>
-        <img class="img-fluid rounded-circle" src="@/assets/farm-woman-01.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/farm-woman-01.png">
       </div>
     </div>
     <div v-if="!error" class="row">
@@ -14,7 +14,7 @@
             @change="textCounter($event)"
           />
           <div class="input-group-append">
-            <button class="btn bg-success text-white" type="button"
+            <button class="btn w-100 bg-success text-white releaseBtn" type="button"
               @click="searchBy($event)"
             >
               Search
@@ -31,13 +31,13 @@
               :key="index"
               @click="setActiveFarmer(farmer, index)"
             >
-              <img class="icon-img img-fluid rounded-circle"
-                :src="randomProfileIcons()"
+              <img class="img-fluid h-auto rounded-circle icon-img"
+                :src="profileIcon"
               >
               {{ farmer.name }}
             </li>
           </ul>
-          <button class="btn w-100 my-1 btn-danger"
+          <button class="btn w-100 my-1 btn-danger releaseBtn"
             @click="deleteFarmers($event)"
           >
             Delete All
@@ -51,7 +51,7 @@
               v-model="currentFarmer.id"
             />
             <div class="input-group-append">
-              <span class="input-group-text fas fa-id-card"></span>
+              <span class="input-group-text d-flex fas fa-id-card"></span>
             </div>
           </div>
           <div class="input-group">
@@ -59,7 +59,7 @@
               v-model="currentFarmer.name"
             />
             <div class="input-group-append">
-              <span class="input-group-text fas fa-user"></span>
+              <span class="input-group-text d-flex fas fa-user"></span>
             </div>
           </div>
           <div class="input-group">
@@ -69,7 +69,7 @@
               @focusout="showHideInput('hide', $event)"
             />
             <div class="input-group-append">
-              <span class="input-group-text fas fa-envelope"></span>
+              <span class="input-group-text d-flex fas fa-envelope"></span>
             </div>
           </div>
           <div class="input-group">
@@ -79,15 +79,15 @@
               @focusout="showHideInput('hide', $event)"
             />
             <div class="input-group-append">
-              <span class="input-group-text fas fa-phone"></span>
+              <span class="input-group-text d-flex fas fa-phone"></span>
             </div>
           </div>
-          <button type="submit" class="btn w-100 my-1 btn-warning text-white"
+          <button type="submit" class="btn w-100 my-1 btn-warning text-white releaseBtn"
             @click="updateFarmer($event)"
           >
             Update
           </button>
-          <button class="btn w-100 my-1 btn-danger text-white"
+          <button class="btn w-100 my-1 btn-danger text-white releaseBtn"
             @click="deleteFarmer($event)"
           >
             Delete
@@ -125,6 +125,7 @@ export default {
   data() {
     return {
       farmers: [],
+      profileIcon: '',
       currentFarmer: null,
       currentIndex: -1,
       query: '',
@@ -135,10 +136,18 @@ export default {
     }
   },
   methods: {
-    randomProfileIcons() {
-      var profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
+    randomIcons(iconType) {
+      var profileIcons, farmerIcons;
 
-      return require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+      if (iconType === 'users') {
+        profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
+
+        return require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+      } else if (iconType === 'farmers') {
+        farmerIcons = ['farmer-man-04', 'farmer-man-05', 'farmer-man-07', 'farmer-woman-01', 'farmer-woman-03', 'farmer-woman-05'];
+
+        return require('@/assets/farmer-icons/farmer-' + farmerIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+      }
     },
 
     textCounter(event) {
@@ -155,11 +164,13 @@ export default {
       }
     },
 
-    pressBtnEffect(btn) {
-      if (!btn.classList.contains('pressedBtn')) {
-        btn.classList.add('pressedBtn');
+    pressReleaseEffect(btn) {
+      if (btn.classList.contains('releaseBtn')) {
+        btn.classList.remove('releaseBtn');
+        btn.classList.add('pressBtn');
       } else {
-        btn.classList.remove('pressedBtn');
+        btn.classList.remove('pressBtn');
+        btn.classList.add('releaseBtn');
       }
     },
 
@@ -185,13 +196,13 @@ export default {
     },
 
     updateFarmer(event) {
-      this.pressBtnEffect(event.target);
+      this.pressReleaseEffect(event.target);
 
       MainService.updateOne(`farmers/${this.currentFarmer.id}`, this.currentFarmer)
         .then(response => {
           console.log(response);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -202,19 +213,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
     deleteFarmers(event) {
-      this.pressBtnEffect(event.target);
+      this.pressReleaseEffect(event.target);
 
       MainService.deleteAll('farmers')
         .then(response => {
           console.log(response);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.success = response.data.message;
 
           setTimeout(() => {
@@ -225,19 +236,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
     },
 
     deleteFarmer(event) {
-      this.pressBtnEffect(event.target);
+      this.pressReleaseEffect(event.target);
 
       MainService.deleteOne(`farmers/${this.currentFarmer.id}`)
         .then(response => {
           console.log(response);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -249,45 +260,44 @@ export default {
         .catch(e => {
           console.log(e.response);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
     searchBy(event) {
-      this.pressBtnEffect(event.target);
+      this.pressReleaseEffect(event.target);
 
       MainService.getBy('farmers', this.query)
         .then(response => {
           console.log(response.data);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.farmers = response.data;
         })
         .catch(e => {
           console.log(e.response);
 
-          this.pressBtnEffect(event.target);
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
     }
   },
   mounted() {
     this.getFarmers();
+    this.profileIcon = this.randomIcons('users');
     console.log('route path:', this.$route.path);
   }
 }
 </script>
 
 <style scoped>
-img {
+.header-img {
   width: 100px;
-  height: auto;
 }
 
 .icon-img {
   width: 50px;
-  height: auto;
 }
 
 .input-group {
@@ -299,17 +309,19 @@ input {
 }
 
 span {
-  display: flex;
   width: 45px;
 }
 
 button {
   border-top-width: 0.0625rem !important;
+}
+
+.releaseBtn {
   border-bottom-width: calc(0.2rem + 0.0625rem) !important;
   border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
-.pressedBtn {
+.pressBtn {
   border-top-width: calc(0.2rem + 0.0625rem) !important;
   border-bottom-width: 0.0625rem !important;
 }
