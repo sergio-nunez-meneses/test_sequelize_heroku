@@ -42,7 +42,7 @@
       </ul>
     </div>
 
-    <div class="router-container container border my-3 p-5">
+    <div class="router-container border mx-auto my-3 p-5">
       <router-view/>
     </div>
   </div>
