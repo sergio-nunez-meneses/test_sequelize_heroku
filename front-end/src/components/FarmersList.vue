@@ -1,20 +1,21 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-md-12">
-        <h3 class="p-3 text-center">Current Farmers</h3>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-center align-items-center my-1 p-1">
+        <h3 class="px-5 text-center">Current Farmers</h3>
+        <img class="img-fluid rounded-circle" src="@/assets/farm-woman-01.png">
       </div>
     </div>
-    <div v-if="!error" class="row align-items-center">
+    <div v-if="!error" class="row">
       <div class="col-md-12">
-        <div class="input-group my-auto p-3">
+        <div class="input-group p-3">
           <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo@bar.fr"
             v-model="query"
             @change="textCounter($event)"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-success" type="button"
-              @click="searchBy"
+            <button class="btn bg-success text-white" type="button"
+              @click="searchBy($event)"
             >
               Search
             </button>
@@ -24,17 +25,20 @@
       <div class="col-md-4">
         <div class="my-auto p-3">
           <ul class="list-group">
-            <li class="list-group-item"
+            <li class="list-group-item d-flex justify-content-between align-items-center"
               :class="{ active: index == currentIndex }"
               v-for="(farmer, index) in farmers"
               :key="index"
               @click="setActiveFarmer(farmer, index)"
             >
+              <img class="icon-img img-fluid rounded-circle"
+                :src="randomProfileIcons()"
+              >
               {{ farmer.name }}
             </li>
           </ul>
           <button class="btn w-100 my-1 btn-danger"
-            @click="deleteFarmers"
+            @click="deleteFarmers($event)"
           >
             Delete All
           </button>
@@ -42,38 +46,49 @@
       </div>
       <div class="col-md-8 m-auto">
         <div v-if="currentFarmer" class="p-3">
-          <form name="updateFarmer"></form>
-          <h3 class="text-center">{{ currentFarmer.name }}</h3>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <strong>Id:</strong> {{ currentFarmer.id }}
-            </li>
-            <li class="list-group-item"
-              @click="showHideInput('show', $event)"
-            >
-              <strong>Email:</strong> {{ currentFarmer.email }}
-            </li>
-            <input form="updateFarmer" type="text" class="form-control d-none"
+          <div class="input-group">
+            <input type="text" class="form-control" name="id" readonly
+              v-model="currentFarmer.id"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text fas fa-id-card"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="name" readonly
+              v-model="currentFarmer.name"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text fas fa-user"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="email" readonly
               v-model="currentFarmer.email"
-              @focusout="showHideInput('hide', $event)"
-            />
-            <li class="list-group-item"
               @click="showHideInput('show', $event)"
-            >
-              <strong>Phone:</strong> {{ currentFarmer.phone }}
-            </li>
-            <input form="updateFarmer" type="text" class="form-control d-none"
-              v-model="currentFarmer.phone"
               @focusout="showHideInput('hide', $event)"
             />
-          </ul>
+            <div class="input-group-append">
+              <span class="input-group-text fas fa-envelope"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="phone" readonly
+              v-model="currentFarmer.phone"
+              @click="showHideInput('show', $event)"
+              @focusout="showHideInput('hide', $event)"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text fas fa-phone"></span>
+            </div>
+          </div>
           <button type="submit" class="btn w-100 my-1 btn-warning text-white"
-            @click="updateFarmer"
+            @click="updateFarmer($event)"
           >
             Update
           </button>
           <button class="btn w-100 my-1 btn-danger text-white"
-            @click="deleteFarmer"
+            @click="deleteFarmer($event)"
           >
             Delete
           </button>
@@ -89,18 +104,14 @@
         </div>
       </div>
     </div>
-    <div v-else-if="success">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-success text-center">
-          <p> {{ success }} </p>
-        </div>
+    <div v-else-if="success" class="col-md-12">
+      <div class="alert p-3 alert-success text-center">
+        <p> {{ success }} </p>
       </div>
     </div>
-    <div v-else-if="error">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-danger text-center">
-          <p> {{ error }} </p>
-        </div>
+    <div v-else-if="error" class="col-md-12">
+      <div class="alert p-3 alert-danger text-center">
+        <p> {{ error }} </p>
       </div>
     </div>
   </div>
@@ -124,21 +135,31 @@ export default {
     }
   },
   methods: {
+    randomProfileIcons() {
+      var profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
+
+      return require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+    },
+
+    textCounter(event) {
+      if (event.target.textLength == 0) {
+        this.getFarmers();
+      }
+    },
+
     showHideInput(action, event) {
-      if (action === 'show') {
-        var input = event.target.nextSibling;
+      if (action === 'show' && event.target.readOnly) {
+        event.target.readOnly = false;
+      } else if (action === 'hide' && !event.target.readOnly) {
+        event.target.readOnly = true;
+      }
+    },
 
-        if (input.classList.contains('d-none')) {
-          input.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
-      } else if (action === 'hide') {
-        var listElement = event.target.previousSibling;
-
-        if (listElement.classList.contains('d-none')) {
-          listElement.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
+    pressBtnEffect(btn) {
+      if (!btn.classList.contains('pressedBtn')) {
+        btn.classList.add('pressedBtn');
+      } else {
+        btn.classList.remove('pressedBtn');
       }
     },
 
@@ -163,11 +184,14 @@ export default {
         });
     },
 
-    updateFarmer() {
+    updateFarmer(event) {
+      this.pressBtnEffect(event.target);
+
       MainService.updateOne(`farmers/${this.currentFarmer.id}`, this.currentFarmer)
         .then(response => {
           console.log(response);
 
+          this.pressBtnEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -178,15 +202,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressBtnEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    deleteFarmers() {
+    deleteFarmers(event) {
+      this.pressBtnEffect(event.target);
+
       MainService.deleteAll('farmers')
         .then(response => {
           console.log(response);
 
+          this.pressBtnEffect(event.target);
           this.success = response.data.message;
 
           setTimeout(() => {
@@ -197,15 +225,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressBtnEffect(event.target);
           this.error = e.response.data.error;
         });
     },
 
-    deleteFarmer() {
+    deleteFarmer(event) {
+      this.pressBtnEffect(event.target);
+
       MainService.deleteOne(`farmers/${this.currentFarmer.id}`)
         .then(response => {
           console.log(response);
 
+          this.pressBtnEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -217,28 +249,27 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressBtnEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    searchBy() {
+    searchBy(event) {
+      this.pressBtnEffect(event.target);
+
       MainService.getBy('farmers', this.query)
         .then(response => {
           console.log(response.data);
 
+          this.pressBtnEffect(event.target);
           this.farmers = response.data;
         })
         .catch(e => {
           console.log(e.response);
 
+          this.pressBtnEffect(event.target);
           this.error = e.response.data.error;
         });
-    },
-
-    textCounter(event) {
-      if (event.target.textLength == 0) {
-        this.getFarmers();
-      }
     }
   },
   mounted() {
@@ -249,5 +280,37 @@ export default {
 </script>
 
 <style scoped>
-/*  */
+img {
+  width: 100px;
+  height: auto;
+}
+
+.icon-img {
+  width: 50px;
+  height: auto;
+}
+
+.input-group {
+  margin: 0.5rem 0;
+}
+
+input {
+  padding: 1.5rem 0.75rem ;
+}
+
+span {
+  display: flex;
+  width: 45px;
+}
+
+button {
+  border-top-width: 0.0625rem !important;
+  border-bottom-width: calc(0.2rem + 0.0625rem) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.pressedBtn {
+  border-top-width: calc(0.2rem + 0.0625rem) !important;
+  border-bottom-width: 0.0625rem !important;
+}
 </style>

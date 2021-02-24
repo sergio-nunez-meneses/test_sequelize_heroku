@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-3 p-3">
         <h3 class="px-5 text-center">Local Farmers Editor</h3>
-        <img class="img-fluid rounded-circle" src="@/assets/profile_female_01.png">
+        <img class="img-fluid rounded-circle" src="@/assets/profile-female-01.png">
       </div>
       <div class="w-75 m-auto pt-3 pb-5">
         <div class="input-group">
