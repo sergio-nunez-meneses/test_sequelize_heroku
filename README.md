@@ -1,15 +1,25 @@
 # Test Express.js
 
-REST API and CRUD application built using [Express application generator](https://expressjs.com/en/starter/generator.html) as follows:
+REST API built using [Express application generator](https://expressjs.com/en/starter/generator.html), and CRUD application using [Vue CLI](https://cli.vuejs.org/guide/creating-a-project.html):
 
 ```
-express folder_name --view=pug
+express folder_name --view=engine
+```
+```
+vue create folder_name
 ```
 
-Installed dependencies:
+### Installed dependencies
 
+
+Back-end:
 ```
-npm install bcrypt cookie-parser cors debug express express-async-handler express-session fs http-errors joi jsonwebtoken morgan mysql2 nodemon pg pg-hstore pug sequelize --save
+npm install bcrypt cookie-parser cors debug express express-async-handler express-session fs http-errors joi jsonwebtoken morgan mysql2 nodemon pg pg-hstore sequelize --save
+```
+
+Front-end:
+```
+npm install axios core-js vue vue-router vuex --save
 ```
 
 ### API
@@ -62,23 +72,12 @@ sequelize db:create
 sequelize db:migrate
 ```
 
-### Heroku deployment
+### TODO
 
-Get database URL:
+Back-end:
 
-```
-heroku config:get DATABASE_URL -a app_name
-```
+- Sanitize inputs with express-validator module
 
-Restart/stop app dyno:
+Front-end:
 
-```
-heroku ps:restart --app app_name
-heroku ps:stop dyno --app app_name
-```
-
-Retreive application's most recent logs:
-
-```
-heroku logs --app app_name
-```
+- Optimized farmers, farms and users components (html generation, common methods, common css).
