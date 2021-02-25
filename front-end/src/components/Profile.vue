@@ -83,7 +83,7 @@ export default {
     randomProfileIcons() {
       var profileIcons = ['unknown1', 'unknown2'];
 
-      this.profileIcon = require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+      this.profileIcon = require('@/assets/img/icons/profiles/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
     },
 
     showHideInput(action, event) {
@@ -138,7 +138,7 @@ export default {
 
 <style scoped>
 .header-img {
-  width: 100px;
+  width: 80px;
 }
 
 .input-group {

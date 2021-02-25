@@ -1,13 +1,13 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <div class="d-flex justify-content-center align-items-center my-1 p-1">
+      <div class="d-flex justify-content-center align-items-center my-3 p-3">
         <h3 class="px-5 text-center">Create Element</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/header-icons/combine-front-soil.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/img/icons/composed/combine-front-soil.png">
       </div>
     </div>
     <div v-if="!submitted" class="col-md-12">
-      <div class="w-75 mt-5 mx-auto">
+      <div class="w-75 mt-5 mb-3 mx-auto">
         <div class="form-group">
           <select class="form-control my-3"
             @click="displayForm($event)"
@@ -20,7 +20,7 @@
         </div>
         <div ref="farmerForm" class="d-none my-4">
           <div class="d-flex justify-content-center my-3 p-1">
-            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/profile-icons/profile-unknown1.png">
+            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/img/icons/profiles/profile-unknown1.png">
           </div>
             <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="name" required
@@ -48,9 +48,6 @@
           </div>
         </div>
         <div ref="farmForm" class="d-none my-4">
-          <div class="d-flex justify-content-center my-3 p-1">
-            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/profile-icons/profile-unknown2.png">
-          </div>
           <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="name" required
               v-model="farm.name"
@@ -86,7 +83,7 @@
         </div>
         <div ref="userForm" class="d-none my-4">
           <div class="d-flex justify-content-center my-3 p-1">
-            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/profile-icons/profile-unknown1.png">
+            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/img/icons/profiles/profile-unknown1.png">
           </div>
           <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="name" required
@@ -125,7 +122,7 @@
             </div>
           </div>
         </div>
-        <button ref="createBtn" class="d-none btn w-100 btn-primary text-white releaseBtn"
+        <button ref="createBtn" class="d-none btn w-100 btn-primary text-white release-btn"
           @click="createElement"
         >
           Create
@@ -141,7 +138,7 @@
       <div class="alert p-3 alert-success text-center">
         <p> {{ success }} </p>
       </div>
-      <button ref="createNewBtn" class="btn w-100 bg-success text-white releaseBtn"
+      <button ref="createNewBtn" class="btn w-100 bg-success text-white release-btn"
         @click="newElement"
       >
         Create New
@@ -191,12 +188,12 @@ export default {
   },
   methods: {
     pressReleaseEffect(btn) {
-      if (btn.classList.contains('releaseBtn')) {
-        btn.classList.remove('releaseBtn');
-        btn.classList.add('pressBtn');
+      if (btn.classList.contains('release-btn')) {
+        btn.classList.remove('release-btn');
+        btn.classList.add('press-btn');
       } else {
-        btn.classList.remove('pressBtn');
-        btn.classList.add('releaseBtn');
+        btn.classList.remove('press-btn');
+        btn.classList.add('release-btn');
       }
     },
 
@@ -316,7 +313,7 @@ export default {
 
 <style scoped>
 .header-img {
-  width: 175px;
+  width: 225px;
 }
 
 .form-img {
@@ -339,12 +336,12 @@ button {
   border-top-width: 0.0625rem !important;
 }
 
-.releaseBtn {
+.release-btn {
   border-bottom-width: calc(0.2rem + 0.0625rem) !important;
   border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
-.pressBtn {
+.press-btn {
   border-top-width: calc(0.2rem + 0.0625rem) !important;
   border-bottom-width: 0.0625rem !important;
 }

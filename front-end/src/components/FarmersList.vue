@@ -1,9 +1,9 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <div class="d-flex justify-content-center align-items-center my-1 p-1">
+      <div class="d-flex justify-content-center align-items-center my-3 p-3">
         <h3 class="px-5 text-center">Current Farmers</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/header-icons/farmer-woman-cow.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/img/icons/composed/farmer-woman-cow.png">
       </div>
     </div>
     <div v-if="!error" class="row">
@@ -14,7 +14,7 @@
             @change="textCounter($event)"
           />
           <div class="input-group-append">
-            <button class="btn w-100 bg-success text-white releaseBtn" type="button"
+            <button class="btn w-100 bg-success text-white release-btn" type="button"
               @click="searchBy($event)"
             >
               Search
@@ -37,7 +37,7 @@
               {{ farmer.name }}
             </li>
           </ul>
-          <button class="btn w-100 my-1 btn-danger releaseBtn"
+          <button class="btn w-100 my-1 btn-danger release-btn"
             @click="deleteFarmers($event)"
           >
             Delete All
@@ -84,12 +84,12 @@
               <span class="input-group-text d-flex fas fa-phone"></span>
             </div>
           </div>
-          <button type="submit" class="btn w-100 my-1 btn-warning text-white releaseBtn"
+          <button type="submit" class="btn w-100 my-1 btn-warning text-white release-btn"
             @click="updateFarmer($event)"
           >
             Update
           </button>
-          <button class="btn w-100 my-1 btn-danger text-white releaseBtn"
+          <button class="btn w-100 my-1 btn-danger text-white release-btn"
             @click="deleteFarmer($event)"
           >
             Delete
@@ -141,7 +141,7 @@ export default {
     randomProfileIcons() {
       var profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
 
-      this.profileIcon = require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+      this.profileIcon = require('@/assets/img/icons/profiles/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
     },
 
     textCounter(event) {
@@ -159,12 +159,12 @@ export default {
     },
 
     pressReleaseEffect(btn) {
-      if (btn.classList.contains('releaseBtn')) {
-        btn.classList.remove('releaseBtn');
-        btn.classList.add('pressBtn');
+      if (btn.classList.contains('release-btn')) {
+        btn.classList.remove('release-btn');
+        btn.classList.add('press-btn');
       } else {
-        btn.classList.remove('pressBtn');
-        btn.classList.add('releaseBtn');
+        btn.classList.remove('press-btn');
+        btn.classList.add('release-btn');
       }
     },
 
@@ -288,7 +288,7 @@ export default {
 
 <style scoped>
 .header-img {
-  width: 150px;
+  width: 225px;
 }
 
 .icon-img {
@@ -311,12 +311,12 @@ button {
   border-top-width: 0.0625rem !important;
 }
 
-.releaseBtn {
+.release-btn {
   border-bottom-width: calc(0.2rem + 0.0625rem) !important;
   border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
-.pressBtn {
+.press-btn {
   border-top-width: calc(0.2rem + 0.0625rem) !important;
   border-bottom-width: 0.0625rem !important;
 }

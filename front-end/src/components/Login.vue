@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-1 py-3">
         <h3 class="px-5 text-center">Local Farmers Editor</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/header-icons/farmer-woman-sheep.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/img/icons/composed/farmer-woman-sheep.png">
       </div>
       <div class="w-75 m-auto pt-3 pb-5 px-5">
         <div class="input-group">
@@ -114,7 +114,7 @@ export default {
 
 <style scoped>
 .header-img {
-  width: 125px;
+  width: 225px;
 }
 
 .form-group {
