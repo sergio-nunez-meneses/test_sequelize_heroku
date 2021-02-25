@@ -3,13 +3,13 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-1 p-1">
         <h3 class="px-5 text-center">Current Farmers</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/farm-woman-01.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/farmer-icons/farmer-woman-03.png">
       </div>
     </div>
     <div v-if="!error" class="row">
       <div class="col-md-12">
         <div class="input-group p-3">
-          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo@bar.fr"
+          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo"
             v-model="query"
             @change="textCounter($event)"
           />
@@ -57,6 +57,8 @@
           <div class="input-group">
             <input type="text" class="form-control" name="name" readonly
               v-model="currentFarmer.name"
+              @click="showHideInput('show', $event)"
+              @focusout="showHideInput('hide', $event)"
             />
             <div class="input-group-append">
               <span class="input-group-text d-flex fas fa-user"></span>
@@ -104,12 +106,12 @@
         </div>
       </div>
     </div>
-    <div v-else-if="success" class="col-md-12">
+    <div v-else-if="success" class="col-md-12 mt-5">
       <div class="alert p-3 alert-success text-center">
         <p> {{ success }} </p>
       </div>
     </div>
-    <div v-else-if="error" class="col-md-12">
+    <div v-else-if="error" class="col-md-12 mt-5">
       <div class="alert p-3 alert-danger text-center">
         <p> {{ error }} </p>
       </div>

@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-3 p-3">
         <h3 class="px-5 text-center"> {{ currentUser.name }} </h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/profile-male-01.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/profile-icons/profile-man.png">
       </div>
       <div class="w-75 m-auto pt-3 pb-5">
         <div class="input-group">
@@ -42,20 +42,17 @@
             @focusout="showHideInput('hide', $event)"
           />
         </div>
-          <button type="submit" class="btn btn-lg w-100 my-1 btn-warning text-white releaseBtn"
-            @click="updateUser($event)"
-          >
-            Update
-          </button>
-          <div v-if="success"
-            class="alert p-3 alert-success text-center">
-            <p> {{ success }} </p>
-          </div>
-          <div v-if="error">
-            <div class="alert p-3 alert-danger text-center">
-              <p> {{ error }} </p>
-            </div>
-          </div>
+        <button type="submit" class="btn btn-lg w-100 my-1 btn-warning text-white releaseBtn"
+          @click="updateUser($event)"
+        >
+          Update
+        </button>
+        <div v-if="success" class="alert p-3 alert-success text-center">
+          <p> {{ success }} </p>
+        </div>
+        <div v-if="error" class="alert p-3 alert-danger text-center">
+          <p> {{ error }} </p>
+        </div>
       </div>
     </div>
   </div>
