@@ -1,14 +1,7 @@
 <template>
   <div id="app" class="container-fluid">
     <div class="row border">
-      <ul v-if="!currentUser" class="d-inline-flex justify-content-end w-100 pt-3 px-3 list-unstyled">
-        <li>
-          <router-link to="/">
-            Login
-          </router-link>
-        </li>
-      </ul>
-      <ul v-else class="d-inline-flex justify-content-around w-100 pt-3 list-unstyled">
+      <ul v-if="currentUser" class="d-inline-flex justify-content-around w-100 pt-3 list-unstyled">
         <li>
           <router-link to="/create">
             Create
@@ -42,7 +35,7 @@
       </ul>
     </div>
 
-    <div class="router-container container border my-3 p-5">
+    <div class="router-container border mx-auto my-3 py-2 px-5">
       <router-view/>
     </div>
   </div>
@@ -70,7 +63,7 @@ export default {
   max-width: 768px;
 }
 
-a {
+router-link, a {
   text-decoration: none;
 }
 </style>

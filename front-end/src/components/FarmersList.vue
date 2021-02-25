@@ -1,20 +1,21 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-md-12">
-        <h3 class="p-3 text-center">Current Farmers</h3>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-center align-items-center my-3 p-3">
+        <h3 class="px-5 text-center">Current Farmers</h3>
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/img/icons/composed/farmer-woman-cow.png">
       </div>
     </div>
-    <div v-if="!error" class="row align-items-center">
+    <div v-if="!error" class="row">
       <div class="col-md-12">
-        <div class="input-group my-auto p-3">
-          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo@bar.fr"
+        <div class="input-group p-3">
+          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo"
             v-model="query"
             @change="textCounter($event)"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-success" type="button"
-              @click="searchBy"
+            <button class="btn w-100 bg-success text-white release-btn" type="button"
+              @click="searchBy($event)"
             >
               Search
             </button>
@@ -24,17 +25,20 @@
       <div class="col-md-4">
         <div class="my-auto p-3">
           <ul class="list-group">
-            <li class="list-group-item"
+            <li class="list-group-item d-flex justify-content-between align-items-center"
               :class="{ active: index == currentIndex }"
               v-for="(farmer, index) in farmers"
               :key="index"
               @click="setActiveFarmer(farmer, index)"
             >
+              <img class="img-fluid h-auto rounded-circle icon-img"
+                :src="profileIcon"
+              >
               {{ farmer.name }}
             </li>
           </ul>
-          <button class="btn w-100 my-1 btn-danger"
-            @click="deleteFarmers"
+          <button class="btn w-100 my-1 btn-danger release-btn"
+            @click="deleteFarmers($event)"
           >
             Delete All
           </button>
@@ -42,38 +46,51 @@
       </div>
       <div class="col-md-8 m-auto">
         <div v-if="currentFarmer" class="p-3">
-          <form name="updateFarmer"></form>
-          <h3 class="text-center">{{ currentFarmer.name }}</h3>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <strong>Id:</strong> {{ currentFarmer.id }}
-            </li>
-            <li class="list-group-item"
+          <div class="input-group">
+            <input type="text" class="form-control" name="id" readonly
+              v-model="currentFarmer.id"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-id-card"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="name" readonly
+              v-model="currentFarmer.name"
               @click="showHideInput('show', $event)"
-            >
-              <strong>Email:</strong> {{ currentFarmer.email }}
-            </li>
-            <input form="updateFarmer" type="text" class="form-control d-none"
+              @focusout="showHideInput('hide', $event)"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-user"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="email" readonly
               v-model="currentFarmer.email"
-              @focusout="showHideInput('hide', $event)"
-            />
-            <li class="list-group-item"
               @click="showHideInput('show', $event)"
-            >
-              <strong>Phone:</strong> {{ currentFarmer.phone }}
-            </li>
-            <input form="updateFarmer" type="text" class="form-control d-none"
-              v-model="currentFarmer.phone"
               @focusout="showHideInput('hide', $event)"
             />
-          </ul>
-          <button type="submit" class="btn w-100 my-1 btn-warning text-white"
-            @click="updateFarmer"
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-envelope"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="phone" readonly
+              v-model="currentFarmer.phone"
+              @click="showHideInput('show', $event)"
+              @focusout="showHideInput('hide', $event)"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-phone"></span>
+            </div>
+          </div>
+          <button type="submit" class="btn w-100 my-1 btn-warning text-white release-btn"
+            @click="updateFarmer($event)"
           >
             Update
           </button>
-          <button class="btn w-100 my-1 btn-danger text-white"
-            @click="deleteFarmer"
+          <button class="btn w-100 my-1 btn-danger text-white release-btn"
+            @click="deleteFarmer($event)"
           >
             Delete
           </button>
@@ -89,18 +106,14 @@
         </div>
       </div>
     </div>
-    <div v-else-if="success">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-success text-center">
-          <p> {{ success }} </p>
-        </div>
+    <div v-else-if="success" class="col-md-12 mt-5">
+      <div class="alert p-3 alert-success text-center">
+        <p> {{ success }} </p>
       </div>
     </div>
-    <div v-else-if="error">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-danger text-center">
-          <p> {{ error }} </p>
-        </div>
+    <div v-else-if="error" class="col-md-12 mt-5">
+      <div class="alert p-3 alert-danger text-center">
+        <p> {{ error }} </p>
       </div>
     </div>
   </div>
@@ -114,6 +127,7 @@ export default {
   data() {
     return {
       farmers: [],
+      profileIcon: '',
       currentFarmer: null,
       currentIndex: -1,
       query: '',
@@ -124,21 +138,33 @@ export default {
     }
   },
   methods: {
+    randomProfileIcons() {
+      var profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
+
+      this.profileIcon = require('@/assets/img/icons/profiles/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+    },
+
+    textCounter(event) {
+      if (event.target.textLength == 0) {
+        this.getFarmers();
+      }
+    },
+
     showHideInput(action, event) {
-      if (action === 'show') {
-        var input = event.target.nextSibling;
+      if (action === 'show' && event.target.readOnly) {
+        event.target.readOnly = false;
+      } else if (action === 'hide' && !event.target.readOnly) {
+        event.target.readOnly = true;
+      }
+    },
 
-        if (input.classList.contains('d-none')) {
-          input.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
-      } else if (action === 'hide') {
-        var listElement = event.target.previousSibling;
-
-        if (listElement.classList.contains('d-none')) {
-          listElement.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
+    pressReleaseEffect(btn) {
+      if (btn.classList.contains('release-btn')) {
+        btn.classList.remove('release-btn');
+        btn.classList.add('press-btn');
+      } else {
+        btn.classList.remove('press-btn');
+        btn.classList.add('release-btn');
       }
     },
 
@@ -163,11 +189,14 @@ export default {
         });
     },
 
-    updateFarmer() {
+    updateFarmer(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.updateOne(`farmers/${this.currentFarmer.id}`, this.currentFarmer)
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -178,15 +207,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    deleteFarmers() {
+    deleteFarmers(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.deleteAll('farmers')
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.success = response.data.message;
 
           setTimeout(() => {
@@ -197,15 +230,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
     },
 
-    deleteFarmer() {
+    deleteFarmer(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.deleteOne(`farmers/${this.currentFarmer.id}`)
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -217,37 +254,70 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    searchBy() {
+    searchBy(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.getBy('farmers', this.query)
         .then(response => {
           console.log(response.data);
 
+          this.pressReleaseEffect(event.target);
           this.farmers = response.data;
         })
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
-    },
-
-    textCounter(event) {
-      if (event.target.textLength == 0) {
-        this.getFarmers();
-      }
     }
   },
   mounted() {
-    this.getFarmers();
     console.log('route path:', this.$route.path);
+
+    this.getFarmers();
+    this.randomProfileIcons();
   }
 }
 </script>
 
 <style scoped>
-/*  */
+.header-img {
+  width: 225px;
+}
+
+.icon-img {
+  width: 50px;
+}
+
+.input-group {
+  margin: 0.5rem 0;
+}
+
+input {
+  padding: 1.5rem 0.75rem ;
+}
+
+span {
+  width: 45px;
+}
+
+button {
+  border-top-width: 0.0625rem !important;
+}
+
+.release-btn {
+  border-bottom-width: calc(0.2rem + 0.0625rem) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.press-btn {
+  border-top-width: calc(0.2rem + 0.0625rem) !important;
+  border-bottom-width: 0.0625rem !important;
+}
 </style>

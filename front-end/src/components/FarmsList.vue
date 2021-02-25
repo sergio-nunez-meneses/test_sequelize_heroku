@@ -1,98 +1,106 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-md-12">
-        <h3 class="p-3 text-center">Current Farms</h3>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-center align-items-center my-3 p-3">
+        <h3 class="px-5 text-center">Current Farms</h3>
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/img/icons/composed/farmer-man-soil.png">
       </div>
     </div>
     <div v-if="!error" class="row align-items-center">
       <div class="col-md-12">
-        <div class="input-group my-auto p-3">
-          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;city=bar"
+        <div class="input-group my-3 p-3">
+          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo"
             v-model="query"
             @change="textCounter($event)"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-success" type="button"
-              @click="searchBy"
+            <button class="btn w-100 bg-success text-white release-btn" type="button"
+              @click="searchBy($event)"
             >
               Search
             </button>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="my-auto p-3">
           <ul class="list-group">
-            <li class="list-group-item"
+            <li class="list-group-item d-flex justify-content-between align-items-center text-justify"
               :class="{ active: index == currentIndex }"
               v-for="(farm, index) in farms"
               :key="index"
               @click="setActiveFarm(farm, index)"
             >
+            <img class="img-fluid h-auto rounded-circle icon-img"
+              :src="farmIcon"
+            >
               {{ farm.name }}
             </li>
           </ul>
-
-          <button class="btn w-100 my-1 btn-danger"
-            @click="deleteFarms"
+          <button class="btn w-100 my-1 btn-danger release-btn"
+            @click="deleteFarms($event)"
           >
             Delete All
           </button>
         </div>
       </div>
-      <div class="col-md-8 m-auto">
+      <div class="col-md-7 m-auto">
         <div v-if="currentFarm" class="p-3">
-          <form name="updateFarm"></form>
-          <h3 class="text-center">{{ currentFarm.name }}</h3>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <strong>Id:</strong> {{ currentFarm.id }}
-            </li>
-            <li class="list-group-item"
-              @click="showHideInput('show', $event)"
-            >
-              <strong>Name:</strong> {{ currentFarm.name }}
-            </li>
-            <input form="updateFarm" type="text" class="form-control d-none"
+          <div class="input-group">
+            <input type="text" class="form-control" name="id" readonly
+              v-model="currentFarm.id"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-id-card"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="name" readonly
               v-model="currentFarm.name"
+              @click="showHideInput('show', $event)"
               @focusout="showHideInput('hide', $event)"
             />
-            <li class="list-group-item"
-              @click="showHideInput('show', $event)"
-            >
-              <strong>Address:</strong> {{ currentFarm.address }}
-            </li>
-            <input form="updateFarm" type="text" class="form-control d-none"
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-user"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="address" readonly
               v-model="currentFarm.address"
+              @click="showHideInput('show', $event)"
               @focusout="showHideInput('hide', $event)"
             />
-            <li class="list-group-item"
-              @click="showHideInput('show', $event)"
-            >
-              <strong>City:</strong> {{ currentFarm.city }}
-            </li>
-            <input form="updateFarm" type="text" class="form-control d-none"
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-address-card"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="city" readonly
               v-model="currentFarm.city"
-              @focusout="showHideInput('hide', $event)"
-            />
-            <li class="list-group-item"
               @click="showHideInput('show', $event)"
-            >
-              <strong>Coordinates:</strong> {{ currentFarm.coordinates }}
-            </li>
-            <input form="updateFarm" type="text" class="form-control d-none"
-              v-model="currentFarm.coordinates"
               @focusout="showHideInput('hide', $event)"
             />
-          </ul>
-          <button type="submit" class="btn w-100 my-1 btn-warning text-white"
-            @click="updateFarm"
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-city"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="coordinates" readonly
+              v-model="currentFarm.coordinates"
+              @click="showHideInput('show', $event)"
+              @focusout="showHideInput('hide', $event)"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-map-marked-alt"></span>
+            </div>
+          </div>
+          <button type="submit" class="btn w-100 my-1 btn-warning text-white release-btn"
+            @click="updateFarm($event)"
           >
             Update
           </button>
-          <button class="btn w-100 my-1 btn-danger text-white"
-            @click="deleteFarm"
+          <button class="btn w-100 my-1 btn-danger text-white release-btn"
+            @click="deleteFarm($event)"
           >
             Delete
           </button>
@@ -108,18 +116,14 @@
         </div>
       </div>
     </div>
-    <div v-else-if="success">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-success text-center">
-          <p> {{ success }} </p>
-        </div>
+    <div v-else-if="success" class="col-md-12 mt-5">
+      <div class="alert p-3 alert-success text-center">
+        <p> {{ success }} </p>
       </div>
     </div>
-    <div v-else-if="error">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-danger text-center">
-          <p> {{ error }} </p>
-        </div>
+    <div v-else-if="error" class="col-md-12 mt-5">
+      <div class="alert p-3 alert-danger text-center">
+        <p> {{ error }} </p>
       </div>
     </div>
   </div>
@@ -133,6 +137,7 @@ export default {
   data() {
     return {
       farms: [],
+      farmIcon: '',
       currentFarm: null,
       currentIndex: -1,
       query: '',
@@ -143,21 +148,33 @@ export default {
     }
   },
   methods: {
+    randomFarmIcons() {
+      var farmIcons = ['barn-01', 'barn-02', 'hot-house', 'mill'];
+
+      this.farmIcon = require('@/assets/img/icons/farms/farm-' + farmIcons[Math.floor(Math.random() * farmIcons.length)] + '.png');
+    },
+
+    textCounter(event) {
+      if (event.target.textLength == 0) {
+        this.getFarms();
+      }
+    },
+
     showHideInput(action, event) {
-      if (action === 'show') {
-        var input = event.target.nextSibling;
+      if (action === 'show' && event.target.readOnly) {
+        event.target.readOnly = false;
+      } else if (action === 'hide' && !event.target.readOnly) {
+        event.target.readOnly = true;
+      }
+    },
 
-        if (input.classList.contains('d-none')) {
-          input.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
-      } else if (action === 'hide') {
-        var listElement = event.target.previousSibling;
-
-        if (listElement.classList.contains('d-none')) {
-          listElement.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
+    pressReleaseEffect(btn) {
+      if (btn.classList.contains('release-btn')) {
+        btn.classList.remove('release-btn');
+        btn.classList.add('press-btn');
+      } else {
+        btn.classList.remove('press-btn');
+        btn.classList.add('release-btn');
       }
     },
 
@@ -182,11 +199,14 @@ export default {
         });
     },
 
-    updateFarm() {
+    updateFarm(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.updateOne(`farms/${this.currentFarm.id}`, this.currentFarm)
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -197,15 +217,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    deleteFarms() {
+    deleteFarms(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.deleteAll('farms')
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.success = response.data.message;
 
           setTimeout(() => {
@@ -216,15 +240,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
     },
 
-    deleteFarm() {
+    deleteFarm(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.deleteOne(`farms/${this.currentFarm.id}`)
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -236,37 +264,70 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    searchBy() {
+    searchBy(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.getBy('farms', this.query)
         .then(response => {
           console.log(response.data);
 
+          this.pressReleaseEffect(event.target);
           this.farms = response.data;
         })
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
-    },
-
-    textCounter(event) {
-      if (event.target.textLength == 0) {
-        this.getFarms();
-      }
     }
   },
   mounted() {
-    this.getFarms();
     console.log('route path:', this.$route.path);
+
+    this.getFarms();
+    this.randomFarmIcons();
   }
 }
 </script>
 
 <style scoped>
-/*  */
+.header-img {
+  width: 225px;
+}
+
+.icon-img {
+  width: 40px;
+}
+
+.input-group {
+  margin: 0.5rem 0;
+}
+
+input {
+  padding: 1.5rem 0.75rem ;
+}
+
+span {
+  width: 45px;
+}
+
+button {
+  border-top-width: 0.0625rem !important;
+}
+
+.release-btn {
+  border-bottom-width: calc(0.2rem + 0.0625rem) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.press-btn {
+  border-top-width: calc(0.2rem + 0.0625rem) !important;
+  border-bottom-width: 0.0625rem !important;
+}
 </style>

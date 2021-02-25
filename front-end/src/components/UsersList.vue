@@ -1,20 +1,21 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-md-12">
-        <h3 class="p-3 text-center">Current Users</h3>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-center align-items-center my-3 p-3">
+        <h3 class="px-5 text-center">Current Users</h3>
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/img/icons/composed/farmer-man-dog.png">
       </div>
     </div>
     <div v-if="!error" class="row align-items-center">
       <div class="col-md-12">
-        <div class="input-group my-auto p-3">
-          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo@bar.fr"
+        <div class="input-group p-3">
+          <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo"
             v-model="query"
             @change="textCounter($event)"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-success" type="button"
-              @click="searchBy"
+            <button class="btn w-100 bg-success text-white release-btn" type="button"
+              @click="searchBy($event)"
             >
               Search
             </button>
@@ -24,17 +25,20 @@
       <div class="col-md-4">
         <div class="my-auto p-3">
           <ul class="list-group">
-            <li class="list-group-item"
+            <li class="list-group-item d-flex justify-content-between align-items-center"
               :class="{ active: index == currentIndex }"
               v-for="(user, index) in users"
               :key="index"
               @click="setActiveUser(user, index)"
             >
+              <img class="img-fluid h-auto rounded-circle icon-img"
+                :src="profileIcon"
+              >
               {{ user.name }}
             </li>
           </ul>
-          <button class="btn w-100 my-1 btn-danger"
-            @click="deleteUsers"
+          <button class="btn w-100 my-1 btn-danger release-btn"
+            @click="deleteUsers($event)"
           >
             Delete All
           </button>
@@ -42,31 +46,51 @@
       </div>
       <div class="col-md-8 m-auto">
         <div v-if="currentUser" class="p-3">
-          <h3 class="text-center">{{ currentUser.name }}</h3>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <strong>Id:</strong> {{ currentUser.id }}
-            </li>
-            <li class="list-group-item">
-              <strong>Email:</strong> {{ currentUser.email }}
-            </li>
-            <li class="list-group-item"
+          <div class="input-group">
+            <input type="text" class="form-control" name="id" readonly
+              v-model="currentUser.id"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-id-card"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="name" readonly
+              v-model="currentUser.name"
               @click="showHideInput('show', $event)"
-            >
-              <strong>Role:</strong> {{ currentUser.role }}
-            </li>
-            <input form="updateUser" type="text" class="form-control d-none"
-              v-model="currentUser.role"
               @focusout="showHideInput('hide', $event)"
             />
-          </ul>
-          <button type="submit" class="btn w-100 my-1 btn-warning text-white"
-            @click="updateUser"
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-user"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="email" readonly
+              v-model="currentUser.email"
+              @click="showHideInput('show', $event)"
+              @focusout="showHideInput('hide', $event)"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-envelope"></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="role" readonly
+              v-model="currentUser.role"
+              @click="showHideInput('show', $event)"
+              @focusout="showHideInput('hide', $event)"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text d-flex fas fa-user-check"></span>
+            </div>
+          </div>
+          <button type="submit" class="btn w-100 my-1 btn-warning text-white release-btn"
+            @click="updateUser($event)"
           >
             Update
           </button>
-          <button class="btn w-100 my-1 btn-danger text-white"
-            @click="deleteUser"
+          <button class="btn w-100 my-1 btn-danger text-white release-btn"
+            @click="deleteUser($event)"
           >
             Delete
           </button>
@@ -82,18 +106,14 @@
         </div>
       </div>
     </div>
-    <div v-else-if="success">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-success text-center">
-          <p> {{ success }} </p>
-        </div>
+    <div v-else-if="success" class="col-md-12 mt-5">
+      <div class="alert p-3 alert-success text-center">
+        <p> {{ success }} </p>
       </div>
     </div>
-    <div v-else-if="error">
-      <div class="col-md-12">
-        <div class="alert p-3 alert-danger text-center">
-          <p> {{ error }} </p>
-        </div>
+    <div v-else-if="error" class="col-md-12 mt-5">
+      <div class="alert p-3 alert-danger text-center">
+        <p> {{ error }} </p>
       </div>
     </div>
   </div>
@@ -107,6 +127,7 @@ export default {
   data() {
     return {
       users: [],
+      profileIcon: '',
       currentUser: null,
       currentIndex: -1,
       query: '',
@@ -117,21 +138,33 @@ export default {
     };
   },
   methods: {
+    randomProfileIcons() {
+      var profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
+
+      this.profileIcon = require('@/assets/img/icons/profiles/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+    },
+
+    textCounter(event) {
+      if (event.target.textLength == 0) {
+        this.getUsers();
+      }
+    },
+
     showHideInput(action, event) {
-      if (action === 'show') {
-        var input = event.target.nextSibling;
+      if (action === 'show' && event.target.readOnly) {
+        event.target.readOnly = false;
+      } else if (action === 'hide' && !event.target.readOnly) {
+        event.target.readOnly = true;
+      }
+    },
 
-        if (input.classList.contains('d-none')) {
-          input.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
-      } else if (action === 'hide') {
-        var listElement = event.target.previousSibling;
-
-        if (listElement.classList.contains('d-none')) {
-          listElement.classList.remove('d-none');
-          event.target.classList.add('d-none');
-        }
+    pressReleaseEffect(btn) {
+      if (btn.classList.contains('release-btn')) {
+        btn.classList.remove('release-btn');
+        btn.classList.add('press-btn');
+      } else {
+        btn.classList.remove('press-btn');
+        btn.classList.add('release-btn');
       }
     },
 
@@ -146,6 +179,7 @@ export default {
           console.log(response.data);
 
           var loggedUser = this.$store.state.auth.user;
+          this.users = [];
 
           for (var [key, value] of Object.entries(response.data)) {
             if (value.name === loggedUser.name) {
@@ -162,11 +196,14 @@ export default {
         });
     },
 
-    updateUser() {
+    updateUser(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.updateOne(`users/${this.currentUser.id}`, this.currentUser)
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -177,15 +214,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    deleteUsers() {
+    deleteUsers(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.deleteAll('users')
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.success = response.data.message;
 
           setTimeout(() => {
@@ -196,15 +237,19 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
     },
 
-    deleteUser() {
+    deleteUser(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.deleteOne(`users/${this.currentUser.id}`)
         .then(response => {
           console.log(response);
 
+          this.pressReleaseEffect(event.target);
           this.successMsg = response.data.message;
 
           setTimeout(() => {
@@ -216,37 +261,70 @@ export default {
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.errorMsg = e.response.data.error;
         });
     },
 
-    searchBy() {
+    searchBy(event) {
+      this.pressReleaseEffect(event.target);
+
       MainService.getBy('users', this.query)
         .then(response => {
           console.log(response.data);
 
+          this.pressReleaseEffect(event.target);
           this.users = response.data;
         })
         .catch(e => {
           console.log(e.response);
 
+          this.pressReleaseEffect(event.target);
           this.error = e.response.data.error;
         });
-    },
-
-    textCounter(event) {
-      if (event.target.textLength == 0) {
-        this.getUsers();
-      }
     }
   },
   mounted() {
-    this.getUsers();
     console.log('route path:', this.$route.path);
+
+    this.getUsers();
+    this.randomProfileIcons();
   }
 }
 </script>
 
 <style scoped>
-/*  */
+.header-img {
+  width: 225px;
+}
+
+.icon-img {
+  width: 50px;
+}
+
+.input-group {
+  margin: 0.5rem 0;
+}
+
+input {
+  padding: 1.5rem 0.75rem ;
+}
+
+span {
+  width: 45px;
+}
+
+button {
+  border-top-width: 0.0625rem !important;
+}
+
+.release-btn {
+  border-bottom-width: calc(0.2rem + 0.0625rem) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.press-btn {
+  border-top-width: calc(0.2rem + 0.0625rem) !important;
+  border-bottom-width: 0.0625rem !important;
+}
 </style>
