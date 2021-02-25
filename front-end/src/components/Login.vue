@@ -1,11 +1,11 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <div class="d-flex justify-content-center align-items-center my-3 p-3">
+      <div class="d-flex justify-content-center align-items-center my-1 py-3">
         <h3 class="px-5 text-center">Local Farmers Editor</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/profile-icons/profile-woman.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/header-icons/farmer-woman-sheep.png">
       </div>
-      <div class="w-75 m-auto pt-3 pb-5">
+      <div class="w-75 m-auto pt-3 pb-5 px-5">
         <div class="input-group">
           <input type="text" class="form-control" name="email" placeholder="email" required
             v-model="user.email"
@@ -114,7 +114,7 @@ export default {
 
 <style scoped>
 .header-img {
-  width: 100px;
+  width: 125px;
 }
 
 .form-group {

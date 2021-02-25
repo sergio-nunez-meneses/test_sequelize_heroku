@@ -3,13 +3,13 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-1 p-1">
         <h3 class="px-5 text-center">Create Element</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/icons/combine-front-soil.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/header-icons/combine-front-soil.png">
       </div>
     </div>
     <div v-if="!submitted" class="col-md-12">
       <div class="w-75 mt-5 mx-auto">
         <div class="form-group">
-          <select class="form-control"
+          <select class="form-control my-3"
             @click="displayForm($event)"
           >
             <option>Select an element to create</option>
@@ -18,8 +18,11 @@
             <option value="user">User</option>
           </select>
         </div>
-        <div ref="farmerForm" class="d-none">
-          <div class="input-group">
+        <div ref="farmerForm" class="d-none my-4">
+          <div class="d-flex justify-content-center my-3 p-1">
+            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/profile-icons/profile-unknown1.png">
+          </div>
+            <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="name" required
               v-model="farmer.name"
             />
@@ -44,7 +47,10 @@
             </div>
           </div>
         </div>
-        <div ref="farmForm" class="d-none">
+        <div ref="farmForm" class="d-none my-4">
+          <div class="d-flex justify-content-center my-3 p-1">
+            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/profile-icons/profile-unknown2.png">
+          </div>
           <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="name" required
               v-model="farm.name"
@@ -78,7 +84,10 @@
             </div>
           </div>
         </div>
-        <div ref="userForm" class="d-none">
+        <div ref="userForm" class="d-none my-4">
+          <div class="d-flex justify-content-center my-3 p-1">
+            <img class="img-fluid h-auto rounded-circle form-img" src="@/assets/profile-icons/profile-unknown1.png">
+          </div>
           <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="name" required
               v-model="user.name"
@@ -291,9 +300,9 @@ export default {
         this.user = {};
       }
 
+      this.pressReleaseEffect(createNewBtn);
       this.submitted = false;
       this.elementName = '';
-      this.pressReleaseEffect(createNewBtn);
     }
   },
   mounted() {
@@ -307,11 +316,11 @@ export default {
 
 <style scoped>
 .header-img {
-  width: 200px;
+  width: 175px;
 }
 
-.icon-img {
-  width: 50px;
+.form-img {
+  width: 70px;
 }
 
 .input-group {

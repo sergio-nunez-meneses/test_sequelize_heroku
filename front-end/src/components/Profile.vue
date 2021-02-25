@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-3 p-3">
         <h3 class="px-5 text-center"> {{ currentUser.name }} </h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/profile-icons/profile-man.png">
+        <img class="img-fluid h-auto rounded-circle header-img" :src="profileIcon">
       </div>
       <div class="w-75 m-auto pt-3 pb-5">
         <div class="input-group">
@@ -65,6 +65,7 @@ export default {
   name: 'user-profile',
   data() {
     return {
+      profileIcon: '',
       success: '',
       error: ''
     }
@@ -79,6 +80,12 @@ export default {
     }
   },
   methods: {
+    randomProfileIcons() {
+      var profileIcons = ['unknown1', 'unknown2'];
+
+      this.profileIcon = require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
+    },
+
     showHideInput(action, event) {
       if (action === 'show' && event.target.readOnly) {
         event.target.readOnly = false;
@@ -123,6 +130,8 @@ export default {
     if (!this.currentUser) {
       this.$router.push('/login');
     }
+
+    this.randomProfileIcons();
   }
 };
 </script>

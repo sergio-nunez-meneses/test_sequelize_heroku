@@ -3,12 +3,12 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-1 p-1">
         <h3 class="px-5 text-center">Current Farms</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/farmer-icons/farmer-woman-05.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/header-icons/farmer-man-soil.png">
       </div>
     </div>
     <div v-if="!error" class="row align-items-center">
       <div class="col-md-12">
-        <div class="input-group p-3">
+        <div class="input-group my-3 p-3">
           <input type="text" class="form-control" placeholder="e.g. name=foo, name=foo&amp;email=foo"
             v-model="query"
             @change="textCounter($event)"
@@ -148,22 +148,10 @@ export default {
     }
   },
   methods: {
-    randomIcons(iconType) {
-      var profileIcons, farmerIcons, farmIcons;
+    randomFarmIcons() {
+      var farmIcons = ['barn-01', 'barn-02', 'hot-house', 'mill'];
 
-      if (iconType === 'users') {
-        profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
-
-        return require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
-      } else if (iconType === 'farmers') {
-        farmerIcons = ['man-04', 'man-05', 'man-07', 'woman-01', 'woman-03', 'woman-05'];
-
-        return require('@/assets/farmer-icons/farmer-' + farmerIcons[Math.floor(Math.random() * farmerIcons.length)] + '.png');
-      } else if (iconType === 'farms') {
-        farmIcons = ['barn-01', 'barn-02', 'hot-house', 'mill'];
-
-        return require('@/assets/farm-icons/farm-' + farmIcons[Math.floor(Math.random() * farmIcons.length)] + '.png');
-      }
+      this.farmIcon = require('@/assets/farm-icons/farm-' + farmIcons[Math.floor(Math.random() * farmIcons.length)] + '.png');
     },
 
     textCounter(event) {
@@ -300,16 +288,17 @@ export default {
     }
   },
   mounted() {
-    this.getFarms();
-    this.farmIcon = this.randomIcons('farms');
     console.log('route path:', this.$route.path);
+
+    this.getFarms();
+    this.randomFarmIcons();
   }
 }
 </script>
 
 <style scoped>
 .header-img {
-  width: 100px;
+  width: 215px;
 }
 
 .icon-img {

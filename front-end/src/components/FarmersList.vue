@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-center align-items-center my-1 p-1">
         <h3 class="px-5 text-center">Current Farmers</h3>
-        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/farmer-icons/farmer-woman-03.png">
+        <img class="img-fluid h-auto rounded-circle header-img" src="@/assets/header-icons/farmer-woman-cow.png">
       </div>
     </div>
     <div v-if="!error" class="row">
@@ -138,18 +138,10 @@ export default {
     }
   },
   methods: {
-    randomIcons(iconType) {
-      var profileIcons, farmerIcons;
+    randomProfileIcons() {
+      var profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
 
-      if (iconType === 'users') {
-        profileIcons = ['unknown1', 'unknown2', 'girl', 'boy', 'woman', 'man'];
-
-        return require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
-      } else if (iconType === 'farmers') {
-        farmerIcons = ['farmer-man-04', 'farmer-man-05', 'farmer-man-07', 'farmer-woman-01', 'farmer-woman-03', 'farmer-woman-05'];
-
-        return require('@/assets/farmer-icons/farmer-' + farmerIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
-      }
+      this.profileIcon = require('@/assets/profile-icons/profile-' + profileIcons[Math.floor(Math.random() * profileIcons.length)] + '.png');
     },
 
     textCounter(event) {
@@ -286,16 +278,17 @@ export default {
     }
   },
   mounted() {
-    this.getFarmers();
-    this.profileIcon = this.randomIcons('users');
     console.log('route path:', this.$route.path);
+
+    this.getFarmers();
+    this.randomProfileIcons();
   }
 }
 </script>
 
 <style scoped>
 .header-img {
-  width: 100px;
+  width: 150px;
 }
 
 .icon-img {
